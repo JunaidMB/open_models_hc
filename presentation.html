@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Models & Post-Training</title>
+<style>
+  :root {
+    --bg-deep: #0f1219;
+    --bg-slide: #161b26;
+    --text-primary: #f0ebe3;
+    --text-secondary: #9aa0a8;
+    --accent-gold: #c9a96e;
+    --accent-sage: #8b9a7d;
+    --accent-rose: #b88a8a;
+    --border-subtle: rgba(201, 169, 110, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+  }
+
+  .deck {
+    width: 100vw; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    display: none;
+    width: 100%; height: 100%;
+    padding: 5vh 8vw;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .slide.active { display: flex; }
+
+  .slide-number {
+    position: absolute;
+    bottom: 3vh; right: 5vw;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .part-label {
+    position: absolute;
+    top: 4vh; left: 5vw;
+    font-size: 0.65rem;
+    color: var(--accent-gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 0.3em;
+    letter-spacing: -0.02em;
+  }
+
+  h1 strong {
+    font-weight: 600;
+    color: var(--accent-gold);
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.8em;
+    color: var(--text-primary);
+  }
+
+  h2 .accent { color: var(--accent-gold); }
+
+  .subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    color: var(--text-secondary);
+    font-weight: 300;
+    max-width: 55ch;
+    line-height: 1.6;
+    margin-bottom: 2em;
+  }
+
+  .bullets {
+    list-style: none;
+    max-width: 50ch;
+  }
+
+  .bullets li {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 0.9em;
+    padding-left: 1.5em;
+    position: relative;
+  }
+
+  .bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0.55em;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    opacity: 0.6;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4vw;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .col h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+    margin-bottom: 0.6em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .col p, .col li {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.5em;
+  }
+
+  .col ul { list-style: none; }
+  .col ul li { padding-left: 1.2em; position: relative; }
+  .col ul li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--accent-sage);
+    opacity: 0.5;
+  }
+
+  .big-stat {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 200;
+    color: var(--accent-gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.5em;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 4vw;
+    margin-top: 2em;
+  }
+
+  .stat-item { text-align: center; }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: var(--accent-gold);
+    opacity: 0.4;
+    margin: 1.5em 0;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.3em 0.8em;
+    border: 1px solid var(--border-subtle);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    color: var(--accent-sage);
+    letter-spacing: 0.05em;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3vw;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .compare-box {
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 2em;
+  }
+
+  .compare-box h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .compare-box.open h3 { color: var(--accent-sage); }
+  .compare-box.closed h3 { color: var(--accent-rose); }
+
+  .nav {
+    position: fixed;
+    bottom: 2vh; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1em;
+    z-index: 100;
+  }
+
+  .nav button {
+    background: rgba(22, 27, 38, 0.8);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 0.6em 1.2em;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s;
+  }
+
+  .nav button:hover {
+    border-color: var(--accent-gold);
+    color: var(--text-primary);
+  }
+
+  .progress {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent-gold);
+    opacity: 0.4;
+    transition: width 0.3s;
+    z-index: 100;
+  }
+
+  .hw-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.5em;
+  }
+  .hw-table th {
+    text-align: left;
+    padding: 0.5em 0.6em;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--accent-gold);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+  }
+  .hw-table td {
+    padding: 0.5em 0.6em;
+    border-bottom: 1px solid rgba(201, 169, 110, 0.08);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .hw-table tr:last-child td { border-bottom: none; }
+  .hw-table .ram-label { color: var(--text-primary); font-weight: 500; white-space: nowrap; }
+
+  @media (max-width: 768px) {
+    .two-col, .compare { grid-template-columns: 1fr; }
+    .stats-row { flex-direction: column; gap: 1.5em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+<!-- Slide 1: Title -->
+<div class="slide active">
+  <div class="part-label">Presentation</div>
+  <h1>Open Language Models<br><strong>& Post-Training</strong></h1>
+  <div class="divider"></div>
+  <p class="subtitle">A practical guide to running, fine-tuning, and understanding open-weight LLMs — from consumer hardware to reinforcement learning.</p>
+  <div style="margin-top:1em">
+    <span class="tag">Local Inference</span>
+    <span class="tag">Quantization</span>
+    <span class="tag">SFT</span>
+    <span class="tag">GRPO</span>
+    <span class="tag">Ollama</span>
+  </div>
+  <div class="slide-number">01 / 20</div>
+</div>
+
+<!-- Slide 2: Open vs Closed -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Open vs. <span class="accent">Closed</span> Models</h2>
+  <div class="compare">
+    <div class="compare-box open">
+      <h3>Open Models</h3>
+      <ul>
+        <li>Weights publicly available</li>
+        <li>Run locally on your own GPU</li>
+        <li>No per-token API fees</li>
+        <li>Fine-tune and redistribute freely</li>
+      </ul>
+    </div>
+    <div class="compare-box closed">
+      <h3>Closed Models</h3>
+      <ul>
+        <li>Weights hidden behind an API</li>
+        <li>Bound by provider terms & pricing</li>
+        <li>No model portability</li>
+        <li>Convenient but not flexible</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">02 / 20</div>
+</div>
+
+<!-- Slide 3: Local vs Cloud -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Local <span class="accent">and</span> Cloud Open Models</h2>
+  <div class="two-col">
+    <div class="col">
+      <h3>Local</h3>
+      <p>Weights live on your disk. Inference happens on your GPU or CPU.</p>
+      <ul>
+        <li>Maximum privacy</li>
+        <li>Zero ongoing costs</li>
+        <li>Hard limits on model size</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Cloud</h3>
+      <p>Open-weight models hosted by a provider. You rent compute.</p>
+      <ul>
+        <li>API convenience</li>
+        <li>Open-license portability</li>
+        <li>Same weights, rented GPUs</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">03 / 20</div>
+</div>
+
+<!-- Slide 4: Hugging Face -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>The <span class="accent">Hugging Face</span> Hub</h2>
+  <p class="subtitle">The de facto package manager for open ML. Browse hundreds of thousands of models, datasets, and training scripts.</p>
+  <ul class="bullets">
+    <li><strong>Model cards</strong> explain training, languages, and license</li>
+    <li><strong>Files & versions</strong> tab shows weight files and quantization variants</li>
+    <li><strong>License tags</strong> matter — some are open-weight only with commercial restrictions</li>
+    <li><strong>Community metrics</strong> (downloads, discussion) signal maturity</li>
+  </ul>
+  <div class="slide-number">04 / 20</div>
+</div>
+
+<!-- Slide 5: Hardware Sizing -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Model Memory <span class="accent">≈</span> Params × Precision</h2>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="big-stat">4×</div>
+      <div class="stat-label">FP32 bytes per param</div>
+    </div>
+    <div class="stat-item">
+      <div class="big-stat">2×</div>
+      <div class="stat-label">FP16 bytes per param</div>
+    </div>
+    <div class="stat-item">
+      <div class="big-stat">½×</div>
+      <div class="stat-label">Q4 bytes per param</div>
+    </div>
+  </div>
+  <p class="subtitle" style="margin-top:2em">A 7B model needs ~28 GB at FP32, ~14 GB at FP16, and ~4 GB at Q4. But these are <em>raw</em> sizes. On system RAM, budget only ~50% for the model — the OS, browser, and IDE need the rest.</p>
+  <div class="slide-number">05 / 20</div>
+</div>
+
+<!-- Slide 6: Hardware Table -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Two Different Memory Worlds</h2>
+  <p class="subtitle">System RAM is shared with the OS. GPU VRAM is dedicated to compute.</p>
+  <div class="two-col" style="max-width:1100px; align-items:start">
+    <div class="col">
+      <h3>System RAM (shared)</h3>
+      <p style="font-size:0.8rem; margin-bottom:0.8em">Assumes you still want to use your machine normally.</p>
+      <table class="hw-table">
+        <tr><th>RAM</th><th>Model</th></tr>
+        <tr><td class="ram-label">8 GB</td><td>1B–2B at Q4</td></tr>
+        <tr><td class="ram-label">16 GB</td><td>3B–4B at Q4</td></tr>
+        <tr><td class="ram-label">32 GB</td><td>7B–8B at Q4</td></tr>
+        <tr><td class="ram-label">64 GB</td><td>13B–30B at Q4</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <h3>GPU VRAM / Unified (dedicated)</h3>
+      <p style="font-size:0.8rem; margin-bottom:0.8em">The model is the dominant tenant.</p>
+      <table class="hw-table">
+        <tr><th>VRAM</th><th>Model</th></tr>
+        <tr><td class="ram-label">16 GB</td><td>7B at Q4 or Q5</td></tr>
+        <tr><td class="ram-label">24 GB</td><td>13B at Q4, 8B at Q8</td></tr>
+        <tr><td class="ram-label">48–64 GB</td><td>30B–70B at Q4</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="subtitle" style="margin-top:1.5em">GPU is all but essential for interactive chat. CPU-only inference is seconds-per-token, not tokens-per-second.</p>
+  <div class="slide-number">06 / 20</div>
+</div>
+
+<!-- Slide 7: Inference Servers -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Inference <span class="accent">Servers</span></h2>
+  <p class="subtitle">An HTTP wrapper around the model that handles KV-cache allocation, batching, token streaming, and memory management.</p>
+  <div class="two-col" style="max-width:900px">
+    <div class="col">
+      <h3>vLLM</h3>
+      <p>State-of-the-art throughput via PagedAttention. Built for production.</p>
+      <h3 style="margin-top:1em">llama.cpp</h3>
+      <p>Extreme portability. Runs on phones, edge devices, CPUs.</p>
+    </div>
+    <div class="col">
+      <h3>Ollama</h3>
+      <p>One-command install. Pre-built model manifests. Local OpenAI-compatible API.</p>
+      <p style="margin-top:0.8em; color:var(--accent-gold)">This guide's beginner-friendly anchor.</p>
+    </div>
+  </div>
+  <div class="slide-number">07 / 20</div>
+</div>
+
+<!-- Slide 8: Quantization -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Model <span class="accent">Quantization</span></h2>
+  <p class="subtitle">Map 32-bit weights onto a smaller discrete set. The single most important technique for consumer hardware.</p>
+  <ul class="bullets">
+    <li><strong>Q4_K_M</strong> — ~4.5 GB for 7B params. Best size/quality balance.</li>
+    <li><strong>Q5_K_M</strong> — slightly larger, slightly sharper.</li>
+    <li><strong>Q8_0</strong> — nearly FP16 quality. Use if you have VRAM to spare.</li>
+    <li>Code generation tolerates quantization better than math proofs.</li>
+  </ul>
+  <div class="slide-number">08 / 20</div>
+</div>
+
+<!-- Slide 9: LLM Harnesses -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>LLM <span class="accent">Harnesses</span></h2>
+  <p class="subtitle">The orchestration layer that turns a raw LLM into an autonomous agent. Not the model — the loop.</p>
+  <div class="two-col">
+    <div class="col">
+      <h3>Coding Harnesses</h3>
+      <p>Claude Code, GitHub Copilot, <a href="https://github.com/QwenLM/qwen-code" style="color:var(--accent-gold)">Qwen Code</a></p>
+      <ul>
+        <li>Grounded in a git repo</li>
+        <li>Mutate code, run tests, iterate</li>
+        <li>Clear success criteria</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>General-Purpose Agents</h3>
+      <p>Pi, Hermes, OpenClaw</p>
+      <ul>
+        <li>Open-ended tasks across domains</li>
+        <li>Wide machine permissions</li>
+        <li>Run on isolated hardware for safety</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">09 / 20</div>
+</div>
+
+<!-- Slide 10: Multimodal -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Beyond <span class="accent">Text</span></h2>
+  <p class="subtitle">Ollama and llama.cpp are text-optimized. For other modalities, use your GPU directly.</p>
+  <div class="two-col" style="max-width:800px">
+    <div class="col">
+      <h3>Images</h3>
+      <p><code style="color:var(--accent-gold)">diffusers</code> — Stable Diffusion, Flux</p>
+      <h3 style="margin-top:1em">Speech</h3>
+      <p>Local Whisper via <code style="color:var(--accent-gold)">transformers</code></p>
+    </div>
+    <div class="col">
+      <h3>TTS</h3>
+      <p>Qwen3TTS, Parler TTS</p>
+      <h3 style="margin-top:1em">Pattern</h3>
+      <p>Text = inference server. Other = Python SDKs.</p>
+    </div>
+  </div>
+  <div class="slide-number">10 / 20</div>
+</div>
+
+<!-- Slide 11: Cloud Scaling -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Scaling to the <span class="accent">Cloud</span></h2>
+  <p class="subtitle">When local inference hits a ceiling, open weights let you shop for compute.</p>
+  <ul class="bullets">
+    <li><strong>Ollama cloud endpoints</strong> — same API, rented GPUs. Test before you buy hardware.</li>
+    <li><strong>W&B Inference</strong> — managed open models with prompt tracing and monitoring.</li>
+    <li><strong>The portability principle</strong> — start on a laptop, move to production, fine-tune yourself. Same weights everywhere.</li>
+  </ul>
+  <div class="slide-number">11 / 20</div>
+</div>
+
+<!-- Slide 12: Smaller Models -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>The Virtues of <span class="accent">Smaller</span> Models</h2>
+  <p class="subtitle">Use the smallest model that satisfies your quality bar. 3B–8B models are often smarter than frontier models for narrow tasks.</p>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="big-stat">0$</div>
+      <div class="stat-label">per token — local cost</div>
+    </div>
+    <div class="stat-item">
+      <div class="big-stat">∞</div>
+      <div class="stat-label">offline use cases</div>
+    </div>
+    <div class="stat-item">
+      <div class="big-stat">100%</div>
+      <div class="stat-label">data privacy kept</div>
+    </div>
+  </div>
+  <div class="slide-number">12 / 20</div>
+</div>
+
+<!-- Slide 13: GPU Provisioning -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Provisioning <span class="accent">More</span> GPUs</h2>
+  <div class="two-col" style="max-width:1000px">
+    <div class="col">
+      <h3>Lightning.ai</h3>
+      <p>Jupyter-like studios. Rapid prototyping.</p>
+      <h3 style="margin-top:0.8em">Google Colab</h3>
+      <p>Free & paid GPU notebooks. Zero-friction start.</p>
+    </div>
+    <div class="col">
+      <h3>Modal</h3>
+      <p>Serverless GPU. Pay by the second. Auto-scales to zero.</p>
+      <h3 style="margin-top:0.8em">Prime Intellect</h3>
+      <p>Decentralized marketplace. Cheapest for batch jobs.</p>
+    </div>
+  </div>
+  <div class="slide-number">13 / 20</div>
+</div>
+
+<!-- Slide 14: Open Alternatives -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Open <span class="accent">Alternatives</span></h2>
+  <p class="subtitle">Closed services monetize convenience. Open weights give you customization, privacy, and long-term savings.</p>
+  <div class="two-col" style="max-width:900px; font-size:0.95rem">
+    <div class="col">
+      <p><strong style="color:var(--accent-rose)">Granola</strong> → <strong style="color:var(--accent-sage)">OpenOats</strong></p>
+      <p><strong style="color:var(--accent-rose)">Whisper API</strong> → <strong style="color:var(--accent-sage)">local Whisper</strong></p>
+      <p><strong style="color:var(--accent-rose)">ElevenLabs</strong> → <strong style="color:var(--accent-sage)">Qwen3TTS</strong></p>
+      <p><strong style="color:var(--accent-rose)">Midjourney</strong> → <strong style="color:var(--accent-sage)">Stable Diffusion / Flux</strong></p>
+    </div>
+    <div class="col">
+      <p><strong style="color:var(--accent-rose)">GitHub Copilot</strong> → <strong style="color:var(--accent-sage)">Continue.dev</strong></p>
+      <p><strong style="color:var(--accent-rose)">ChatGPT</strong> → <strong style="color:var(--accent-sage)">Ollama + LFM</strong></p>
+    </div>
+  </div>
+  <div class="slide-number">14 / 20</div>
+</div>
+
+<!-- Slide 15: Post-Training Intro -->
+<div class="slide" style="background:var(--bg-deep)">
+  <div class="part-label">Part II — Post-Training</div>
+  <h2>What Is <span class="accent">Post-Training?</span></h2>
+  <p class="subtitle">Pre-training gives you a fluent but unaligned base model. Post-training turns it into a useful assistant.</p>
+  <div class="two-col">
+    <div class="col">
+      <h3 style="color:var(--accent-rose)">Pre-Training</h3>
+      <ul>
+        <li>Next-token prediction</li>
+        <li>Massive unlabeled corpora</li>
+        <li>Raw knowledge, no alignment</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--accent-sage)">Post-Training</h3>
+      <ul>
+        <li>Curated task-specific data</li>
+        <li>SFT + reinforcement learning</li>
+        <li>Instruction following & safety</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">15 / 20</div>
+</div>
+
+<!-- Slide 16: SFT -->
+<div class="slide">
+  <div class="part-label">Part II — Post-Training</div>
+  <h2>Supervised <span class="accent">Fine-Tuning</span></h2>
+  <p class="subtitle">Maximize the log-likelihood of high-quality (instruction, response) pairs.</p>
+  <div style="border:1px solid var(--border-subtle); border-radius:12px; padding:1.5em 2em; margin:1em 0; max-width:600px">
+    <code style="color:var(--accent-gold); font-size:1.1rem">max<sub style="font-size:0.7em">θ</sub> Σ log P<sub style="font-size:0.7em">θ</sub>(y | x)</code>
+  </div>
+  <ul class="bullets">
+    <li>Teaches format, style, and shallow patterns</li>
+    <li>Loss computed only on response tokens</li>
+    <li>Necessary first step — gives a sensible starting policy</li>
+    <li style="color:var(--accent-rose)">Cannot exceed training data quality</li>
+  </ul>
+  <div class="slide-number">16 / 20</div>
+</div>
+
+<!-- Slide 17: The Need for RL -->
+<div class="slide">
+  <div class="part-label">Part II — Post-Training</div>
+  <h2>The Need for <span class="accent">Reinforcement Learning</span></h2>
+  <p class="subtitle">Replace fixed labels with a reward signal. The model explores many responses and learns to favour those that score highly.</p>
+  <div class="two-col">
+    <div class="col">
+      <h3 style="color:var(--text-secondary)">SFT Mindset</h3>
+      <p>"Here is the correct answer. Copy it."</p>
+      <ul>
+        <li>Imitation</li>
+        <li>Single correct path</li>
+        <li>Capped by label quality</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--accent-gold)">RL Mindset</h3>
+      <p>"Try many solutions. Keep what works."</p>
+      <ul>
+        <li>Optimization</li>
+        <li>Many paths explored</li>
+        <li>Surpasses label quality</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">17 / 20</div>
+</div>
+
+<!-- Slide 18: RLVR & GRPO -->
+<div class="slide">
+  <div class="part-label">Part II — Post-Training</div>
+  <h2>RLVR <span class="accent">&</span> GRPO</h2>
+  <p class="subtitle">Reinforcement Learning with Verifiable Rewards. No learned reward model — just ground truth.</p>
+  <div class="two-col">
+    <div class="col">
+      <h3>RLVR Rewards</h3>
+      <p>Objective, verifiable facts:</p>
+      <ul>
+        <li>Unit tests pass → reward = 1</li>
+        <li>Math answer matches → reward = 1</li>
+        <li>Game score achieved</li>
+        <li>JSON validates against schema</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>GRPO</h3>
+      <p>Group Relative Policy Optimization:</p>
+      <ul>
+        <li>No value network needed</li>
+        <li>Sample G responses per prompt</li>
+        <li>Advantage = (rᵢ − r̄) / σᵣ</li>
+        <li>Clipped surrogate + KL penalty</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">18 / 20</div>
+</div>
+
+<!-- Slide 19: GGUF & Ollama -->
+<div class="slide">
+  <div class="part-label">Part II — Post-Training</div>
+  <h2>GGUF <span class="accent">→</span> Ollama</h2>
+  <p class="subtitle">Closing the loop: export your fine-tuned model and run it locally.</p>
+  <ul class="bullets">
+    <li><strong>Unsloth exports</strong> directly to GGUF with your chosen quantization</li>
+    <li><strong>GGUF</strong> stores weights, vocab, and metadata in one portable binary</li>
+    <li><strong>Modelfile</strong> defines system prompt, temperature, and context length</li>
+    <li><strong>ollama create</strong> registers it locally — identical to any Hub model</li>
+  </ul>
+  <div class="slide-number">19 / 20</div>
+</div>
+
+<!-- Slide 20: Summary -->
+<div class="slide">
+  <div class="part-label">Closing</div>
+  <h1>Local. Open.<br><strong>Fine-Tuned.</strong></h1>
+  <div class="divider"></div>
+  <p class="subtitle">Open weights give you portability. Start with Ollama. Scale to the cloud. Post-train with SFT + GRPO. Own your models.</p>
+  <div style="margin-top:1.5em">
+    <span class="tag">Hugging Face</span>
+    <span class="tag">Ollama</span>
+    <span class="tag">Unsloth</span>
+    <span class="tag">GRPO</span>
+    <span class="tag">GGUF</span>
+  </div>
+  <div class="slide-number">20 / 20</div>
+</div>
+
+</div>
+
+<div class="nav">
+  <button onclick="goPrev()">Previous</button>
+  <button onclick="goNext()">Next</button>
+</div>
+<div class="progress" id="progress"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+
+  function show(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[i].classList.add('active');
+    current = i;
+    document.getElementById('progress').style.width = ((i + 1) / slides.length * 100) + '%';
+  }
+
+  function goNext() { if (current < slides.length - 1) show(current + 1); }
+  function goPrev() { if (current > 0) show(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goNext(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+  });
+
+  document.addEventListener('click', e => {
+    const x = e.clientX;
+    if (x > window.innerWidth * 0.7) goNext();
+    else if (x < window.innerWidth * 0.3) goPrev();
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
