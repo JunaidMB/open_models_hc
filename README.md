@@ -6,6 +6,7 @@ A practical guide to running, understanding, and fine-tuning open-weight languag
 
 - **`docs/open_models_guide.md`** — A tutorial covering open vs. closed models, the Hugging Face ecosystem, model selection for your hardware, quantization, inference servers, and cloud scaling.
 - **`docs/post_training_unsloth.md`** — An explainer on post-training: SFT, reinforcement learning with verifiable rewards (RLVR), and Group Relative Policy Optimization (GRPO) using [Unsloth](https://unsloth.ai).
+- **`docs/activities_links.md`** — Curated links and references for each hands-on activity in the slide deck (Ollama setup, coding harnesses, TTS, open alternatives, and Colab notebooks).
 - **`presentation.html`** — An interactive slide deck summarizing both guides.
 - **`.env_example`** — Template for API keys (Hugging Face, Weights & Biases).
 - **`notebooks/`** — Runnable examples:
