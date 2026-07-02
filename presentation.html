@@ -1066,6 +1066,7 @@
     slides[i].classList.add('active');
     current = i;
     document.getElementById('progress').style.width = ((i + 1) / slides.length * 100) + '%';
+    history.replaceState(null, '', '#' + (i + 1));
   }
 
   function goNext() { if (current < slides.length - 1) show(current + 1); }
@@ -1082,7 +1083,17 @@
     else if (x < window.innerWidth * 0.3) goPrev();
   });
 
-  show(0);
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx < 0 ? goNext() : goPrev(); }
+    touchX = null;
+  });
+
+  const fromHash = parseInt(location.hash.slice(1), 10);
+  show(isNaN(fromHash) ? 0 : Math.min(Math.max(fromHash - 1, 0), slides.length - 1));
 </script>
 
 </body>
