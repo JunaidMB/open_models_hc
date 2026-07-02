@@ -115,6 +115,11 @@ Code installed for the skill test.
   The `qwen3-tts`/`mlx` pyproject issue is already fixed (2 July).
 - Companion skill distribution: DONE. Served at https://luqmaan.dev/skills/localhost
   (text/markdown, Cloudflare Pages); QR on the MacBook Desktop
-  (localhost-workshop-skill-qr.png) decodes to that URL. Note the site copy is a
-  snapshot: if the skill changes again, re-copy it to public/skills/localhost.md
-  in the luqmaan.dev repo and push (deploy is automatic).
+  (localhost-workshop-skill-qr.png) decodes to that URL, and the deck's Scan This
+  First slide carries the same QR. The deck itself is served at
+  https://luqmaan.dev/slides/localhost (deep links work, e.g. /slides/localhost#5).
+  Note the site copies are snapshots: if the skill or deck changes again, re-copy
+  to public/skills/localhost.md / public/slides/localhost.html in the luqmaan.dev
+  repo and push (deploy is automatic). Do NOT add a _redirects rule for the deck:
+  Pages' native pretty URLs already serve it, and a 200 rewrite to the .html path
+  creates a redirect loop (learned the hard way).
