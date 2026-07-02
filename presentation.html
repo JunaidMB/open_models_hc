@@ -273,6 +273,57 @@
   .compare-box.open li::before { color: var(--accent-sage); }
   .compare-box.closed li::before { color: var(--accent-rose); }
 
+  /* Activity slides: unmistakably hands-on */
+  .slide.activity {
+    box-shadow: inset 0 0 0 3px rgba(212, 176, 119, 0.3);
+    padding-bottom: 16vh;
+  }
+
+  .slide.activity .part-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    color: var(--bg-deep);
+    background: var(--accent-gold);
+    padding: 0.55em 1.5em;
+    border-radius: 10px;
+    opacity: 1;
+  }
+
+  .activity-footer {
+    position: absolute;
+    bottom: 7.5vh; left: 50%;
+    transform: translateX(-50%);
+    width: min(1100px, 86vw);
+    border: 1px solid var(--border-subtle);
+    background: rgba(212, 176, 119, 0.07);
+    border-radius: 12px;
+    padding: 0.65em 1.4em;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .activity-footer strong { color: var(--accent-gold); font-weight: 650; }
+
+  .anchor-caption {
+    color: var(--accent-gold);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.7em;
+  }
+
+  .anchor-box {
+    border: 2px solid var(--accent-gold);
+    background: rgba(212, 176, 119, 0.08);
+    border-radius: 14px;
+    padding: 1.3em 1.5em;
+    box-shadow: 0 0 24px rgba(212, 176, 119, 0.12);
+  }
+
   .nav {
     position: fixed;
     bottom: 2vh; left: 50%;
@@ -359,7 +410,7 @@
     <span class="tag">GRPO</span>
     <span class="tag">Ollama</span>
   </div>
-  <div class="slide-number">01 / 29</div>
+  <div class="slide-number">01 / 30</div>
 </div>
 
 <!-- Slide: Aims & Outcomes -->
@@ -378,7 +429,7 @@
     <span class="tag">Bring-your-own-hardware</span>
     <span class="tag">Ship something</span>
   </div>
-  <div class="slide-number">02 / 29</div>
+  <div class="slide-number">02 / 30</div>
 </div>
 
 <!-- Slide 2: Open vs Closed -->
@@ -405,7 +456,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">03 / 29</div>
+  <div class="slide-number">03 / 30</div>
 </div>
 
 <!-- Slide 3: Local vs Cloud -->
@@ -432,21 +483,21 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">04 / 29</div>
+  <div class="slide-number">04 / 30</div>
 </div>
 
 <!-- Slide 4: Hugging Face -->
 <div class="slide">
   <div class="part-label">Part I — Open Models</div>
   <h2>The <span class="accent">Hugging Face</span> Hub</h2>
-  <p class="subtitle">The de facto package manager for open ML. Browse hundreds of thousands of models, datasets, and training scripts.</p>
+  <p class="subtitle">The de facto repository for open ML. Browse hundreds of thousands of models, datasets, and training scripts.</p>
   <ul class="bullets">
     <li><strong>Model cards</strong> explain training, languages, and license</li>
     <li><strong>Files & versions</strong> tab shows weight files and quantization variants</li>
     <li><strong>License tags</strong> matter — some are open-weight only with commercial restrictions</li>
     <li><strong>Community metrics</strong> (downloads, discussion) signal maturity</li>
   </ul>
-  <div class="slide-number">05 / 29</div>
+  <div class="slide-number">05 / 30</div>
 </div>
 
 <!-- Slide 5: Hardware Sizing -->
@@ -468,7 +519,7 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:2em">A 7B model needs ~28 GB at FP32, ~14 GB at FP16, and ~4 GB at Q4. But these are <em>raw</em> sizes. On system RAM, budget only ~50% for the model — the OS, browser, and IDE need the rest.</p>
-  <div class="slide-number">06 / 29</div>
+  <div class="slide-number">06 / 30</div>
 </div>
 
 <!-- Slide 6: Hardware Table -->
@@ -500,7 +551,7 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:1.5em">GPU is all but essential for interactive chat. CPU-only inference is seconds-per-token, not tokens-per-second.</p>
-  <div class="slide-number">07 / 29</div>
+  <div class="slide-number">07 / 30</div>
 </div>
 
 <!-- Slide: Apple Unified Memory & lm-fit -->
@@ -510,17 +561,36 @@
   <p class="subtitle">Apple Silicon collapses the two memory worlds into one. The win is capacity, not speed.</p>
   <div class="two-col" style="max-width:1000px">
     <div class="col">
-      <h3>M-series Macs</h3>
-      <p>CPU and GPU share one memory pool. A 64+ GB Mac loads 70B models that fit on no consumer GPU.</p>
-      <p style="margin-top:0.8em">The trade-off is speed. Decode is bandwidth-bound: 273 GB/s (M4 Pro) to 546 GB/s (M4 Max) vs ~1 TB/s on an RTX 4090, so like-for-like models run 2-3x slower, and prompt processing (compute-bound) is slower still. Capacity, not speed.</p>
+      <h3>One pool of memory</h3>
+      <p>CPU and GPU share the same memory on M-series Macs. A 64+ GB Mac loads 70B models that fit on no consumer GPU.</p>
+      <p style="margin-top:0.8em">Capacity is the win: models that need a data-centre card elsewhere just load.</p>
     </div>
     <div class="col">
-      <h3>Know before you pull: <code style="color:var(--accent-gold)">llmfit</code></h3>
-      <p><code style="color:var(--accent-gold)">brew install llmfit</code>. Detects your RAM, CPU, and GPU, then scores 200+ models on quality, speed, fit, and context. Picks the best quantization and estimates tokens/sec before you download anything.</p>
-      <p style="margin-top:0.8em">Pick the largest model that stays interactive, not the largest that technically loads.</p>
+      <h3>The speed trade-off</h3>
+      <p>Decode is bandwidth-bound: 273 GB/s (M4 Pro) to 546 GB/s (M4 Max) vs ~1 TB/s on an RTX 4090. Like-for-like models run 2-3x slower, and prompt processing (compute-bound) is slower still.</p>
+      <p style="margin-top:0.8em">Bigger models fit; they don't run faster.</p>
     </div>
   </div>
-  <div class="slide-number">08 / 29</div>
+  <div class="slide-number">08 / 30</div>
+</div>
+
+<!-- Slide: Right-size with llmfit -->
+<div class="slide">
+  <div class="part-label">Part I — Open Models</div>
+  <h2>Right-Size with <span class="accent">llmfit</span></h2>
+  <p class="subtitle">Know what your machine can actually run before you download gigabytes. One command; works on macOS, Windows, and Linux.</p>
+  <ul class="bullets">
+    <li><code style="color:var(--accent-gold)">brew install llmfit</code>, or grab a release from <code style="color:var(--accent-gold)">github.com/AlexsJones/llmfit</code></li>
+    <li>Detects your RAM, CPU, and GPU, then scores 200+ models on quality, speed, fit, and context</li>
+    <li>Picks the best quantization for your memory and estimates tokens/sec up front</li>
+    <li>Rule of thumb: run the largest model that stays interactive, not the largest that technically loads</li>
+  </ul>
+  <div style="margin-top:1.5em">
+    <span class="tag">Hardware detection</span>
+    <span class="tag">Tokens/sec estimate</span>
+    <span class="tag">Quantization picker</span>
+  </div>
+  <div class="slide-number">09 / 30</div>
 </div>
 
 <!-- Slide 7: Inference Servers -->
@@ -536,19 +606,21 @@
       <p>Extreme portability. Runs on phones, edge devices, CPUs.</p>
     </div>
     <div class="col">
-      <h3>Ollama</h3>
-      <p>One-command install. Pre-built model manifests. Local OpenAI-compatible API.</p>
-      <p style="margin-top:0.8em; color:var(--accent-gold)">This guide's beginner-friendly anchor.</p>
+      <p class="anchor-caption">★ Tonight's anchor, start here</p>
+      <div class="anchor-box">
+        <h3>Ollama</h3>
+        <p>One-command install. Pre-built model manifests. Local OpenAI-compatible API.</p>
+      </div>
     </div>
   </div>
-  <div class="slide-number">09 / 29</div>
+  <div class="slide-number">10 / 30</div>
 </div>
 
 <!-- Slide: The Product Seam -->
 <div class="slide">
   <div class="part-label">Part I — Open Models</div>
-  <h2>The <span class="accent">Product Seam</span></h2>
-  <p class="subtitle">How does a local model become a product? Rarely by building an app around a model. Usually by slotting the model into software that already exists.</p>
+  <h2>From Local Model to <span class="accent">Product</span></h2>
+  <p class="subtitle">Rarely by building an app around a model. Usually by slotting the model into software that already exists.</p>
   <ul class="bullets">
     <li>Ollama serves <code style="color:var(--accent-gold)">http://localhost:11434/v1</code>, the same protocol as OpenAI</li>
     <li>Thousands of tools and libraries speak that protocol: <strong>change the base URL, and they run on your machine</strong></li>
@@ -560,11 +632,11 @@
     <span class="tag">base_url</span>
     <span class="tag">trigger → model → artifact</span>
   </div>
-  <div class="slide-number">10 / 29</div>
+  <div class="slide-number">11 / 30</div>
 </div>
 
 <!-- Activity Slide A1: Ollama Hands-on -->
-<div class="slide">
+<div class="slide activity">
   <div class="part-label">Activity — Part I</div>
   <h2>Hands-on: Run a Model with <span class="accent">Ollama</span></h2>
   <p class="subtitle">Go from zero to a working local LLM in minutes.</p>
@@ -579,7 +651,8 @@
     <span class="tag">Local Inference</span>
     <span class="tag">OpenAI API</span>
   </div>
-  <div class="slide-number">11 / 29</div>
+  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
+  <div class="slide-number">12 / 30</div>
 </div>
 
 <!-- Slide 8: Quantization -->
@@ -593,7 +666,7 @@
     <li><strong>Q8_0</strong> — nearly FP16 quality. Use if you have VRAM to spare.</li>
     <li>Code generation tolerates quantization better than math proofs.</li>
   </ul>
-  <div class="slide-number">12 / 29</div>
+  <div class="slide-number">13 / 30</div>
 </div>
 
 <!-- Slide 9: LLM Harnesses -->
@@ -621,11 +694,12 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">13 / 29</div>
+  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
+  <div class="slide-number">14 / 30</div>
 </div>
 
 <!-- Activity Slide A2: Coding Harness -->
-<div class="slide">
+<div class="slide activity">
   <div class="part-label">Activity — Part I</div>
   <h2>Hands-on: Coding Harness <span class="accent">vs</span> Model Size</h2>
   <p class="subtitle">Observe how latency and quality trade off as you swap models behind the same harness.</p>
@@ -649,7 +723,7 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:1.5em">Note the tokens-per-second and whether completions actually compile or require manual fixes.</p>
-  <div class="slide-number">14 / 29</div>
+  <div class="slide-number">15 / 30</div>
 </div>
 
 <!-- Slide 10: Multimodal -->
@@ -672,11 +746,11 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:1.5em">Pattern: understanding modalities (vision, ASR) are small and CPU-friendly. Generation modalities want a GPU.</p>
-  <div class="slide-number">15 / 29</div>
+  <div class="slide-number">16 / 30</div>
 </div>
 
 <!-- Activity Slide A3: Speech & TTS -->
-<div class="slide">
+<div class="slide activity">
   <div class="part-label">Activity — Part I</div>
   <h2>Hands-on: Local <span class="accent">Speech</span> & TTS</h2>
   <p class="subtitle">Transcribe audio and synthesise speech using open models.</p>
@@ -699,7 +773,8 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:1.5em"><strong>Stretch:</strong> research Qwen3TTS voice cloning and try to implement a short local clone of your own voice.</p>
-  <div class="slide-number">16 / 29</div>
+  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
+  <div class="slide-number">17 / 30</div>
 </div>
 
 <!-- Slide 11: Cloud Scaling -->
@@ -712,7 +787,7 @@
     <li><strong>W&B Inference</strong> — managed open models with prompt tracing and monitoring.</li>
     <li><strong>The portability principle</strong> — start on a laptop, move to production, fine-tune yourself. Same weights everywhere.</li>
   </ul>
-  <div class="slide-number">17 / 29</div>
+  <div class="slide-number">18 / 30</div>
 </div>
 
 <!-- Slide 12: Smaller Models -->
@@ -734,7 +809,7 @@
       <div class="stat-label">data privacy kept</div>
     </div>
   </div>
-  <div class="slide-number">18 / 29</div>
+  <div class="slide-number">19 / 30</div>
 </div>
 
 <!-- Slide 13: GPU Provisioning -->
@@ -755,11 +830,11 @@
       <p>Decentralized marketplace. Cheapest for batch jobs.</p>
     </div>
   </div>
-  <div class="slide-number">19 / 29</div>
+  <div class="slide-number">20 / 30</div>
 </div>
 
 <!-- Activity Slide A4: Image Generation -->
-<div class="slide">
+<div class="slide activity">
   <div class="part-label">Activity — Part I</div>
   <h2>Hands-on: Generate <span class="accent">Images</span> on GPU</h2>
   <p class="subtitle">Provision a GPU and synthesise an image from prompt to pixels.</p>
@@ -774,7 +849,8 @@
     <span class="tag">Stable Diffusion</span>
     <span class="tag">Colab</span>
   </div>
-  <div class="slide-number">20 / 29</div>
+  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
+  <div class="slide-number">21 / 30</div>
 </div>
 
 <!-- Slide 14: Open Alternatives -->
@@ -782,23 +858,24 @@
   <div class="part-label">Part I — Open Models</div>
   <h2>Open <span class="accent">Alternatives</span></h2>
   <p class="subtitle">Closed services monetize convenience. Open weights give you customization, privacy, and long-term savings.</p>
-  <div class="two-col" style="max-width:900px; font-size:0.95rem">
+  <div class="two-col" style="max-width:1000px">
     <div class="col">
+      <p><strong style="color:var(--accent-rose)">Wispr Flow</strong> → <strong style="color:var(--accent-sage)">Handy</strong></p>
       <p><strong style="color:var(--accent-rose)">Granola</strong> → <strong style="color:var(--accent-sage)">OpenOats</strong></p>
-      <p><strong style="color:var(--accent-rose)">Whisper API</strong> → <strong style="color:var(--accent-sage)">local Whisper</strong></p>
+      <p style="font-size:0.78em; color:var(--text-secondary); margin-top:-0.4em; margin-left:0.2em">made by Yazine, someone in our community. Feel free to Google him.</p>
       <p><strong style="color:var(--accent-rose)">ElevenLabs</strong> → <strong style="color:var(--accent-sage)">Qwen3TTS</strong></p>
-      <p><strong style="color:var(--accent-rose)">Midjourney</strong> → <strong style="color:var(--accent-sage)">Stable Diffusion / Flux</strong></p>
     </div>
     <div class="col">
-      <p><strong style="color:var(--accent-rose)">GitHub Copilot</strong> → <strong style="color:var(--accent-sage)">Continue.dev</strong></p>
+      <p><strong style="color:var(--accent-rose)">Midjourney</strong> → <strong style="color:var(--accent-sage)">Stable Diffusion / Flux (or ComfyUI)</strong></p>
+      <p><strong style="color:var(--accent-rose)">GitHub Copilot</strong> → <strong style="color:var(--accent-sage)">OpenCode</strong></p>
       <p><strong style="color:var(--accent-rose)">ChatGPT</strong> → <strong style="color:var(--accent-sage)">Ollama + LFM</strong></p>
     </div>
   </div>
-  <div class="slide-number">21 / 29</div>
+  <div class="slide-number">22 / 30</div>
 </div>
 
 <!-- Activity Slide A5: Replace a Closed Service -->
-<div class="slide">
+<div class="slide activity">
   <div class="part-label">Activity — Part I</div>
   <h2>Hands-on: Ship <span class="accent">Something</span></h2>
   <p class="subtitle">Pick ONE track from <code style="color:var(--accent-gold)">tracks/</code>. Each is a small end-to-end product that replaces a paid service, built from the models you've already set up tonight.</p>
@@ -809,7 +886,8 @@
     <li><strong>★★★ morning_briefing.py</strong>: calendar, todos & weather → a spoken daily briefing <em>(LLM + TTS + cron)</em></li>
   </ul>
   <p class="subtitle" style="margin-top:1.5em"><strong>Stretch, make it ambient:</strong> <code style="color:var(--accent-gold)">--watch</code> flags, cron / Task Scheduler. The recipe is always the same: <strong>trigger → small model → artifact</strong>.</p>
-  <div class="slide-number">22 / 29</div>
+  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
+  <div class="slide-number">23 / 30</div>
 </div>
 
 <!-- Slide 15: Post-Training Intro -->
@@ -835,7 +913,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">23 / 29</div>
+  <div class="slide-number">24 / 30</div>
 </div>
 
 <!-- Slide 16: SFT -->
@@ -852,7 +930,7 @@
     <li>Necessary first step — gives a sensible starting policy</li>
     <li style="color:var(--accent-rose)">Cannot exceed training data quality</li>
   </ul>
-  <div class="slide-number">24 / 29</div>
+  <div class="slide-number">25 / 30</div>
 </div>
 
 <!-- Slide 17: The Need for RL -->
@@ -880,7 +958,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">25 / 29</div>
+  <div class="slide-number">26 / 30</div>
 </div>
 
 <!-- Slide 18: RLVR & GRPO -->
@@ -910,7 +988,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">26 / 29</div>
+  <div class="slide-number">27 / 30</div>
 </div>
 
 <!-- Slide 19: GGUF & Ollama -->
@@ -924,7 +1002,7 @@
     <li><strong>Modelfile</strong> defines system prompt, temperature, and context length</li>
     <li><strong>ollama create</strong> registers it locally — identical to any Hub model</li>
   </ul>
-  <div class="slide-number">27 / 29</div>
+  <div class="slide-number">28 / 30</div>
 </div>
 
 <!-- Slide 20: Summary -->
@@ -940,11 +1018,11 @@
     <span class="tag">GRPO</span>
     <span class="tag">GGUF</span>
   </div>
-  <div class="slide-number">28 / 29</div>
+  <div class="slide-number">29 / 30</div>
 </div>
 
 <!-- Activity Slide A6: Stretch Post-Training -->
-<div class="slide">
+<div class="slide activity">
   <div class="part-label">Activity — Part II</div>
   <h2>Stretch: <span class="accent">Fine-Tune</span> & Deploy</h2>
   <p class="subtitle">Finish at home. Follow <code style="color:var(--accent-gold)">docs/post_training_unsloth.md</code> to close the full loop.</p>
@@ -960,7 +1038,7 @@
     <span class="tag">GGUF</span>
     <span class="tag">Hugging Face</span>
   </div>
-  <div class="slide-number">29 / 29</div>
+  <div class="slide-number">30 / 30</div>
 </div>
 
 </div>
