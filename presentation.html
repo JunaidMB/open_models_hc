@@ -412,7 +412,7 @@
   <div class="part-label">Presentation</div>
   <h1>Open Language Models<br><strong>& Post-Training</strong></h1>
   <div class="divider"></div>
-  <p class="subtitle">A practical guide to running, fine-tuning, and understanding open-weight LLMs — from consumer hardware to reinforcement learning.</p>
+  <p class="subtitle">A practical guide to running, fine-tuning, and understanding open-weight LLMs; from consumer hardware to reinforcement learning.</p>
   <div style="margin-top:1em">
     <span class="tag">Local Inference</span>
     <span class="tag">Quantization</span>
@@ -454,6 +454,7 @@
         <li>Run locally on your own GPU</li>
         <li>No per-token API fees</li>
         <li>Fine-tune and redistribute freely</li>
+        <li>No shutdown blues: a model on your disk can't be deprecated, rug-pulled, or price-hiked</li>
       </ul>
     </div>
     <div class="compare-box closed">
@@ -499,13 +500,14 @@
 <!-- Slide 4: Hugging Face -->
 <div class="slide">
   <div class="part-label">The Open Model Landscape</div>
-  <h2>The <span class="accent">Hugging Face</span> Hub</h2>
+  <h2><span class="accent">Hugging Face</span></h2>
   <p class="subtitle">The de facto repository for open ML. Browse hundreds of thousands of models, datasets, and training scripts.</p>
   <ul class="bullets">
     <li><strong>Model cards</strong> explain training, languages, and license</li>
     <li><strong>Files & versions</strong> tab shows weight files and quantization variants</li>
     <li><strong>License tags</strong> matter — some are open-weight only with commercial restrictions</li>
     <li><strong>Community metrics</strong> (downloads, discussion) signal maturity</li>
+    <li><strong>Filter by task</strong> (speech recognition, text-to-speech, vision and more) to discover what exists. Live demo</li>
   </ul>
   <div class="slide-number">05 / 30</div>
 </div>
@@ -528,7 +530,7 @@
       <div class="stat-label">Q4 bytes per param</div>
     </div>
   </div>
-  <p class="subtitle" style="margin-top:2em">A 7B model needs ~28 GB at FP32, ~14 GB at FP16, and ~4 GB at Q4. But these are <em>raw</em> sizes. On system RAM, budget only ~50% for the model — the OS, browser, and IDE need the rest.</p>
+  <p class="subtitle" style="margin-top:2em">FP means full-precision numbers; Q4 means weights compressed to 4 bits, about an eighth of the size (quantization gets its own slide soon). A 7B model needs ~28 GB at FP32, ~14 GB at FP16, and ~4 GB at Q4. But these are <em>raw</em> sizes. On system RAM, budget only ~50% for the model.</p>
   <div class="slide-number">06 / 30</div>
 </div>
 
@@ -607,11 +609,11 @@
 <div class="slide">
   <div class="part-label">Serving Models</div>
   <h2>Inference <span class="accent">Servers</span></h2>
-  <p class="subtitle">An HTTP wrapper around the model that handles KV-cache allocation, batching, token streaming, and memory management.</p>
+  <p class="subtitle">An HTTP wrapper around the model that handles batching, token streaming, and memory management.</p>
   <div class="two-col" style="max-width:900px">
     <div class="col">
       <h3>vLLM</h3>
-      <p>State-of-the-art throughput via PagedAttention. Built for production.</p>
+      <p>State-of-the-art throughput. Built for serving many users in production.</p>
       <h3 style="margin-top:1em">llama.cpp</h3>
       <p>Extreme portability. Runs on phones, edge devices, CPUs.</p>
     </div>
@@ -792,7 +794,7 @@
   <p class="subtitle">When local inference hits a ceiling, open weights let you shop for compute.</p>
   <ul class="bullets">
     <li><strong>Ollama cloud endpoints</strong> — same API, rented GPUs. Test before you buy hardware.</li>
-    <li><strong>W&B Inference</strong> — managed open models with prompt tracing and monitoring.</li>
+    <li><strong>Weights & Biases (W&B) Inference</strong> — managed open models with prompt tracing and monitoring.</li>
     <li><strong>The portability principle</strong> — start on a laptop, move to production, fine-tune yourself. Same weights everywhere.</li>
   </ul>
   <div class="slide-number">18 / 30</div>
@@ -850,7 +852,7 @@
     <li>Open a Google Colab notebook (free T4 GPU tier) or use a local Metal/CUDA machine you already have</li>
     <li>Install <code style="color:var(--accent-gold)">diffusers</code>, <code style="color:var(--accent-gold)">accelerate</code>, and <code style="color:var(--accent-gold)">safetensors</code></li>
     <li>Run through <code style="color:var(--accent-gold)">notebooks/image_generation_diffusers.ipynb</code> end-to-end</li>
-    <li><strong>Stretch:</strong> experiment with different schedulers, CFG scales, and resolutions to compare output quality</li>
+    <li><strong>Stretch:</strong> experiment with the strength, steps, and resolution settings to compare output quality</li>
   </ul>
   <div style="margin-top:1.5em">
     <span class="tag">diffusers</span>
@@ -886,7 +888,7 @@
 <div class="slide activity">
   <div class="part-label">Activity E</div>
   <h2><span class="hands-on-kicker">Hands-on</span>Ship <span class="accent">Something</span></h2>
-  <p class="subtitle">Pick ONE track from <code style="color:var(--accent-gold)">tracks/</code>. Each is a small end-to-end product that replaces a paid service, built from the models you've already set up tonight.</p>
+  <p class="subtitle">Pick ONE track from <code style="color:var(--accent-gold)">tracks/</code>. Each is a small end-to-end product that could have been a paid service, built from the models you've already set up tonight.</p>
   <ul class="bullets">
     <li><strong>★ screenshot_librarian.py</strong>: a local VLM names, tags & indexes your screenshots <em>(Ollama only)</em></li>
     <li><strong>★★ media_indexer.py</strong>: transcribe a folder of audio into a searchable index <em>(Whisper; per-minute APIs → £0)</em></li>
@@ -1005,7 +1007,7 @@
   <h2>GGUF <span class="accent">→</span> Ollama</h2>
   <p class="subtitle">Closing the loop: export your fine-tuned model and run it locally.</p>
   <ul class="bullets">
-    <li><strong>Unsloth exports</strong> directly to GGUF with your chosen quantization</li>
+    <li><strong>Unsloth</strong> (the fine-tuning toolkit from Activity F) exports directly to GGUF with your chosen quantization</li>
     <li><strong>GGUF</strong> stores weights, vocab, and metadata in one portable binary</li>
     <li><strong>Modelfile</strong> defines system prompt, temperature, and context length</li>
     <li><strong>ollama create</strong> registers it locally — identical to any Hub model</li>
