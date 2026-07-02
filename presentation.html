@@ -361,6 +361,50 @@
     box-shadow: 0 0 24px rgba(212, 176, 119, 0.12);
   }
 
+  /* Light theme */
+  body.light {
+    --bg-deep: #f6f1e7;
+    --bg-slide: #fdfaf4;
+    --text-primary: #241f18;
+    --text-secondary: #5c554a;
+    --text-bullet: #38322a;
+    --accent-gold: #9a7328;
+    --accent-sage: #5c7050;
+    --accent-rose: #a05c5c;
+    --border-subtle: rgba(154, 115, 40, 0.28);
+  }
+  body.light .compare-box { background: rgba(154, 115, 40, 0.05); }
+  body.light .activity-footer { background: rgba(154, 115, 40, 0.06); }
+  body.light .anchor-box { background: rgba(154, 115, 40, 0.06); box-shadow: 0 0 24px rgba(154, 115, 40, 0.1); }
+  body.light code { background: rgba(154, 115, 40, 0.08); border-color: rgba(154, 115, 40, 0.25); }
+  body.light .slide.activity { box-shadow: inset 0 0 0 3px rgba(154, 115, 40, 0.35); }
+  body.light .nav button, body.light #themeToggle { background: rgba(253, 250, 244, 0.85); }
+
+  #themeToggle {
+    position: fixed;
+    top: 3vh; right: 3vw;
+    z-index: 101;
+    background: rgba(22, 27, 38, 0.8);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    width: 2.5em; height: 2.5em;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+  #themeToggle:hover { border-color: var(--accent-gold); color: var(--text-primary); }
+
+  /* Short viewports (720p projectors): compact the busy activity slides */
+  @media (max-height: 820px) {
+    .slide.activity { padding-top: 10vh; padding-bottom: 19vh; }
+    .slide.activity h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); margin-bottom: 0.4em; }
+    .slide.activity .subtitle { font-size: 1.02rem; margin-bottom: 1em; }
+    .slide.activity .bullets li { font-size: 1.02rem; margin-bottom: 0.5em; }
+    .slide.activity .col p, .slide.activity .col li { font-size: 0.95rem; }
+    .activity-footer { font-size: 0.8rem; bottom: 6vh; padding: 0.5em 1.2em; }
+  }
+
   .nav {
     position: fixed;
     bottom: 2vh; left: 50%;
@@ -922,7 +966,7 @@
     <li><strong>★★★ private_podcast.py</strong>: any article → spoken episode → private podcast feed on your LAN <em>(LLM + TTS)</em></li>
     <li><strong>★★★ morning_briefing.py</strong>: calendar, todos & weather → a spoken daily briefing <em>(LLM + TTS + cron)</em></li>
   </ul>
-  <p class="subtitle" style="margin-top:1.5em"><strong>Stretch, make it ambient:</strong> <code style="color:var(--accent-gold)">--watch</code> flags, cron / Task Scheduler. The recipe is always the same: <strong>trigger → small model → artifact</strong>.</p>
+  <p class="subtitle" style="margin-top:1.2em"><strong>The ask:</strong> starter code is in the repo. Shipping means it runs against <em>your</em> real data and stays installed when you leave. <strong>Stretch:</strong> make it ambient (<code style="color:var(--accent-gold)">--watch</code>, cron) or design your own <strong>trigger → model → artifact</strong>.</p>
   <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
   <div class="slide-number">23 / 30</div>
 </div>
@@ -1080,6 +1124,7 @@
 
 </div>
 
+<button id="themeToggle" title="Toggle light/dark" aria-label="Toggle light or dark theme">☾</button>
 <div class="nav">
   <button onclick="goPrev()">Previous</button>
   <button onclick="goNext()">Next</button>
@@ -1107,9 +1152,23 @@
   });
 
   document.addEventListener('click', e => {
+    if (e.target.closest('button') || e.target.closest('a')) return;
     const x = e.clientX;
     if (x > window.innerWidth * 0.7) goNext();
     else if (x < window.innerWidth * 0.3) goPrev();
+  });
+
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(t) {
+    document.body.classList.toggle('light', t === 'light');
+    themeToggle.textContent = t === 'light' ? '☀' : '☾';
+  }
+  let theme = localStorage.getItem('deck-theme') || 'dark';
+  applyTheme(theme);
+  themeToggle.addEventListener('click', () => {
+    theme = theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('deck-theme', theme);
+    applyTheme(theme);
   });
 
   let touchX = null;

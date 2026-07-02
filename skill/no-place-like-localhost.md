@@ -134,10 +134,16 @@ service. They pick ONE. Ask what they'd actually use, not what sounds impressive
 | `private_podcast.py`: article → spoken episode → LAN podcast feed | ElevenLabs + read-later | Ollama + TTS | ★★★ |
 | `morning_briefing.py`: calendar/todos/weather → spoken briefing | a subscription | Ollama + TTS + cron | ★★★ |
 
+The bar for "shipped": the track runs on THEIR machine against THEIR real data (their
+actual screenshots folder, an article they saved, their real todos), and it is still
+installed when they leave. Running the sample data is a checkpoint, not the finish.
+
 How to guide this stage:
 - Have them **read the script before running it** and narrate back what the pipeline
   is (trigger → model → artifact). That pattern, not the specific script, is what
   they should take home.
+- If a track feels too easy, the open tier: they design their own trigger → model →
+  artifact and build it with you. They steer; you review.
 - When something breaks, don't fix it. Ask what the error says, where in the pipeline
   it happened, and what they'd check first. Guide with questions; only give the answer
   if they're stuck twice.
