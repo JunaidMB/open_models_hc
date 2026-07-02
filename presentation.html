@@ -491,7 +491,49 @@
     <span class="tag">GRPO</span>
     <span class="tag">Ollama</span>
   </div>
-  <div class="slide-number">01 / 30</div>
+  <div class="slide-number">01 / 32</div>
+</div>
+
+<!-- Slide: Your Hosts -->
+<div class="slide">
+  <div class="part-label">Tonight</div>
+  <h2>Your <span class="accent">Hosts</span></h2>
+  <p class="subtitle">Two builders who would rather assemble the thing than subscribe to it.</p>
+  <div class="two-col" style="max-width:1000px">
+    <div class="col">
+      <h3>Luqmaan Ahmed</h3>
+      <p>Engineer and serial workshop-runner. Ran the last Tech Guild hands-on, <a href="https://luqmaan.dev/labs" style="color:var(--accent-gold)">Agents Assemble</a>.</p>
+      <p style="margin-top:0.8em">Runs local models on everything from this MacBook to a gaming PC in a cupboard.</p>
+    </div>
+    <div class="col">
+      <h3>Junaid Butt</h3>
+      <p>Data scientist. Built the original version of this session and the companion repo, <a href="https://github.com/JunaidMB/open_models_hc" style="color:var(--accent-gold)">open_models_hc</a>.</p>
+      <p style="margin-top:0.8em">Currently deep in small-model fine-tuning research.</p>
+    </div>
+  </div>
+  <div style="margin-top:1.5em">
+    <span class="tag">Wave us over anytime</span>
+  </div>
+  <div class="slide-number">02 / 32</div>
+</div>
+
+<!-- Slide: Why Local, and How We'll Work -->
+<div class="slide">
+  <div class="part-label">Tonight</div>
+  <h2>Why <span class="accent">Local</span>?</h2>
+  <p class="subtitle">Three reasons we keep coming back to running models on our own machines.</p>
+  <ul class="bullets">
+    <li><strong>Build, don't just consume:</strong> understanding the moving parts puts you in a position to make AI products, not only subscribe to them</li>
+    <li><strong>Save real money:</strong> per-token APIs and monthly subscriptions become a one-off download on hardware you already own</li>
+    <li><strong>See how simple it is:</strong> most AI products you pay for are a model, a wrapper, and a trigger. Tonight we assemble them ourselves</li>
+  </ul>
+  <div style="margin-top:1.5em; max-width:900px; margin-left:auto; margin-right:auto">
+    <p class="anchor-caption">Our approach tonight</p>
+    <div class="anchor-box">
+      <p>Ground up, not GUI down. We start from weights, servers, and small scripts rather than touring polished apps, so you leave knowing how the pieces fit, not just which buttons to press.</p>
+    </div>
+  </div>
+  <div class="slide-number">03 / 32</div>
 </div>
 
 <!-- Slide: Aims & Outcomes -->
@@ -510,7 +552,7 @@
     <span class="tag">Bring-your-own-hardware</span>
     <span class="tag">Ship something</span>
   </div>
-  <div class="slide-number">02 / 30</div>
+  <div class="slide-number">04 / 32</div>
 </div>
 
 <!-- Slide 2: Open vs Closed -->
@@ -538,7 +580,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">03 / 30</div>
+  <div class="slide-number">05 / 32</div>
 </div>
 
 <!-- Slide 3: Local vs Cloud -->
@@ -565,7 +607,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">04 / 30</div>
+  <div class="slide-number">06 / 32</div>
 </div>
 
 <!-- Slide 4: Hugging Face -->
@@ -580,7 +622,7 @@
     <li><strong>Community metrics</strong> (downloads, discussion) signal maturity</li>
     <li><strong>Filter by task</strong> (speech recognition, text-to-speech, vision and more) to discover what exists. Live demo</li>
   </ul>
-  <div class="slide-number">05 / 30</div>
+  <div class="slide-number">07 / 32</div>
 </div>
 
 <!-- Slide 5: Hardware Sizing -->
@@ -602,7 +644,7 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:2em">FP means full-precision numbers; Q4 means weights compressed to 4 bits, about an eighth of the size (quantization gets its own slide soon). A 7B model needs ~28 GB at FP32, ~14 GB at FP16, and ~4 GB at Q4. But these are <em>raw</em> sizes. On system RAM, budget only ~50% for the model.</p>
-  <div class="slide-number">06 / 30</div>
+  <div class="slide-number">08 / 32</div>
 </div>
 
 <!-- Slide 6: Hardware Table -->
@@ -634,7 +676,7 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:1.5em">GPU is all but essential for interactive chat. CPU-only inference is seconds-per-token, not tokens-per-second.</p>
-  <div class="slide-number">07 / 30</div>
+  <div class="slide-number">09 / 32</div>
 </div>
 
 <!-- Slide: Apple Unified Memory & lm-fit -->
@@ -654,7 +696,7 @@
       <p style="margin-top:0.8em">Bigger models fit; they don't run faster.</p>
     </div>
   </div>
-  <div class="slide-number">08 / 30</div>
+  <div class="slide-number">10 / 32</div>
 </div>
 
 <!-- Slide: Right-size with llmfit -->
@@ -673,7 +715,7 @@
     <span class="tag">Tokens/sec estimate</span>
     <span class="tag">Quantization picker</span>
   </div>
-  <div class="slide-number">09 / 30</div>
+  <div class="slide-number">11 / 32</div>
 </div>
 
 <!-- Slide 7: Inference Servers -->
@@ -696,7 +738,7 @@
       </div>
     </div>
   </div>
-  <div class="slide-number">10 / 30</div>
+  <div class="slide-number">12 / 32</div>
 </div>
 
 <!-- Slide: The Product Seam -->
@@ -715,7 +757,7 @@
     <span class="tag">base_url</span>
     <span class="tag">trigger → model → artifact</span>
   </div>
-  <div class="slide-number">11 / 30</div>
+  <div class="slide-number">13 / 32</div>
 </div>
 
 <!-- Activity Slide A1: Ollama Hands-on -->
@@ -735,7 +777,7 @@
     <span class="tag">OpenAI API</span>
   </div>
   <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
-  <div class="slide-number">12 / 30</div>
+  <div class="slide-number">14 / 32</div>
 </div>
 
 <!-- Slide 8: Quantization -->
@@ -749,7 +791,7 @@
     <li><strong>Q8_0</strong> — nearly FP16 quality. Use if you have VRAM to spare.</li>
     <li>Code generation tolerates quantization better than math proofs.</li>
   </ul>
-  <div class="slide-number">13 / 30</div>
+  <div class="slide-number">15 / 32</div>
 </div>
 
 <!-- Slide 9: LLM Harnesses -->
@@ -777,7 +819,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">14 / 30</div>
+  <div class="slide-number">16 / 32</div>
 </div>
 
 <!-- Activity Slide A2: Coding Harness -->
@@ -804,7 +846,7 @@
     </div>
   </div>
   <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
-  <div class="slide-number">15 / 30</div>
+  <div class="slide-number">17 / 32</div>
 </div>
 
 <!-- Slide 10: Multimodal -->
@@ -827,7 +869,7 @@
     </div>
   </div>
   <p class="subtitle" style="margin-top:1.5em">Pattern: understanding modalities (vision, ASR) are small and CPU-friendly. Generation modalities want a GPU.</p>
-  <div class="slide-number">16 / 30</div>
+  <div class="slide-number">18 / 32</div>
 </div>
 
 <!-- Activity Slide A3: Speech & TTS -->
@@ -855,7 +897,7 @@
   </div>
   <p class="subtitle" style="margin-top:1.5em"><strong>Stretch:</strong> research Qwen3TTS voice cloning and try to implement a short local clone of your own voice.</p>
   <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
-  <div class="slide-number">17 / 30</div>
+  <div class="slide-number">19 / 32</div>
 </div>
 
 <!-- Slide 11: Cloud Scaling -->
@@ -868,7 +910,7 @@
     <li><strong>Weights & Biases (W&B) Inference</strong> — managed open models with prompt tracing and monitoring.</li>
     <li><strong>The portability principle</strong> — start on a laptop, move to production, fine-tune yourself. Same weights everywhere.</li>
   </ul>
-  <div class="slide-number">18 / 30</div>
+  <div class="slide-number">20 / 32</div>
 </div>
 
 <!-- Slide 12: Smaller Models -->
@@ -890,7 +932,7 @@
       <div class="stat-label">data privacy kept</div>
     </div>
   </div>
-  <div class="slide-number">19 / 30</div>
+  <div class="slide-number">21 / 32</div>
 </div>
 
 <!-- Slide 13: GPU Provisioning -->
@@ -911,7 +953,7 @@
       <p>Decentralized marketplace. Cheapest for batch jobs.</p>
     </div>
   </div>
-  <div class="slide-number">20 / 30</div>
+  <div class="slide-number">22 / 32</div>
 </div>
 
 <!-- Activity Slide A4: Image Generation -->
@@ -931,7 +973,7 @@
     <span class="tag">Colab</span>
   </div>
   <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
-  <div class="slide-number">21 / 30</div>
+  <div class="slide-number">23 / 32</div>
 </div>
 
 <!-- Slide 14: Open Alternatives -->
@@ -952,7 +994,7 @@
       <p><strong style="color:var(--accent-rose)">ChatGPT</strong> → <strong style="color:var(--accent-sage)">Ollama + LFM</strong></p>
     </div>
   </div>
-  <div class="slide-number">22 / 30</div>
+  <div class="slide-number">24 / 32</div>
 </div>
 
 <!-- Activity Slide A5: Replace a Closed Service -->
@@ -969,7 +1011,7 @@
   </ul>
   <p class="subtitle" style="margin-top:1.2em"><strong>The ask:</strong> starter code is in the repo. Shipping means it runs against <em>your</em> real data and stays installed when you leave. <strong>Stretch:</strong> make it ambient (<code style="color:var(--accent-gold)">--watch</code>, cron).</p>
   <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
-  <div class="slide-number">23 / 30</div>
+  <div class="slide-number">25 / 32</div>
 </div>
 
 <!-- Slide 15: Post-Training Intro -->
@@ -995,7 +1037,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">24 / 30</div>
+  <div class="slide-number">26 / 32</div>
 </div>
 
 <!-- Slide 16: SFT -->
@@ -1012,7 +1054,7 @@
     <li>Necessary first step — gives a sensible starting policy</li>
     <li style="color:var(--accent-rose)">Cannot exceed training data quality</li>
   </ul>
-  <div class="slide-number">25 / 30</div>
+  <div class="slide-number">27 / 32</div>
 </div>
 
 <!-- Slide 17: The Need for RL -->
@@ -1040,7 +1082,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">26 / 30</div>
+  <div class="slide-number">28 / 32</div>
 </div>
 
 <!-- Slide 18: RLVR & GRPO -->
@@ -1070,7 +1112,7 @@
       </ul>
     </div>
   </div>
-  <div class="slide-number">27 / 30</div>
+  <div class="slide-number">29 / 32</div>
 </div>
 
 <!-- Slide 19: GGUF & Ollama -->
@@ -1084,7 +1126,7 @@
     <li><strong>Modelfile</strong> defines system prompt, temperature, and context length</li>
     <li><strong>ollama create</strong> registers it locally — identical to any Hub model</li>
   </ul>
-  <div class="slide-number">28 / 30</div>
+  <div class="slide-number">30 / 32</div>
 </div>
 
 <!-- Slide 20: Summary -->
@@ -1100,7 +1142,7 @@
     <span class="tag">GRPO</span>
     <span class="tag">GGUF</span>
   </div>
-  <div class="slide-number">29 / 30</div>
+  <div class="slide-number">31 / 32</div>
 </div>
 
 <!-- Activity Slide A6: Stretch Post-Training -->
@@ -1120,7 +1162,7 @@
     <span class="tag">GGUF</span>
     <span class="tag">Hugging Face</span>
   </div>
-  <div class="slide-number">30 / 30</div>
+  <div class="slide-number">32 / 32</div>
 </div>
 
 </div>
