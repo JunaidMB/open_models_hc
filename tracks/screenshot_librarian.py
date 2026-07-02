@@ -14,6 +14,7 @@ WSL terminal but Ollama on Windows? Run Windows-side (verified):
 """
 
 import argparse
+import json
 import os
 import re
 import time
@@ -27,22 +28,37 @@ IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
 DONE_MARKER = re.compile(r"^\d{4}-\d{2}-\d{2}--")  # files we already renamed
 
 PROMPT = (
-    "You are naming a screenshot for a searchable library. Reply with exactly two lines:\n"
-    "NAME: a 3-6 word kebab-case filename describing the content (no extension)\n"
-    "TAGS: 3-5 comma-separated lowercase tags"
+    "You are naming a screenshot for a searchable library. Return JSON with "
+    '"name" (a 3-6 word kebab-case filename describing the content, no extension) '
+    'and "tags" (3-5 lowercase tags).'
 )
+
+# Structured outputs: the same schema trick as the Activity A exercise. Small
+# VLMs often ignore "reply with exactly two lines" prompts; a schema can't be ignored.
+SCHEMA = {
+    "type": "object",
+    "properties": {
+        "name": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["name", "tags"],
+}
 
 
 def describe(image: Path) -> tuple[str, str]:
     response = chat(
         model=MODEL,
         messages=[{"role": "user", "content": PROMPT, "images": [str(image)]}],
+        format=SCHEMA,
     )
-    text = response.message.content
-    name = re.search(r"NAME:\s*(.+)", text)
-    tags = re.search(r"TAGS:\s*(.+)", text)
-    slug = re.sub(r"[^a-z0-9-]+", "-", (name.group(1) if name else "unnamed").lower()).strip("-")
-    return slug[:60], (tags.group(1).strip() if tags else "")
+    data = json.loads(response.message.content)
+    slug = re.sub(r"[^a-z0-9-]+", "-", str(data.get("name", "")).lower()).strip("-")
+    if not slug:
+        # raise instead of filing an "unnamed" dud: the file keeps its name and
+        # gets retried on the next run
+        raise ValueError(f"no usable name in reply: {response.message.content[:120]}")
+    tags = ", ".join(str(t).strip().lower() for t in data.get("tags", []) if str(t).strip())
+    return slug[:60], tags
 
 
 def process_folder(folder: Path, index: Path) -> int:

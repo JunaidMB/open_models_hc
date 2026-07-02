@@ -33,7 +33,9 @@ Workshop repo: https://github.com/JunaidMB/open_models_hc
 ## Step 0: Detect their setup (you do this part, read-only)
 
 Determine, then confirm with the attendee in one line:
-- **OS**: macOS / Linux / native Windows / WSL. Check `uname`, `$OSTYPE`, or `ver`.
+- **OS**: macOS / Linux / native Windows / WSL. Check `uname` or `$OSTYPE`; in
+  PowerShell use `$PSVersionTable` or `systeminfo | Select-String 'OS Name'` (`ver`
+  is a cmd.exe builtin and fails in PowerShell).
 - **RAM**: `free -g` (Linux/WSL), `sysctl hw.memsize` (mac), `systeminfo` (Windows).
 - **GPU / Apple Silicon**: `nvidia-smi`, or check for an M-series chip on mac.
 
@@ -65,10 +67,12 @@ Show them the sizing table, tell them their RAM from Step 0, and ask them to cho
 | 32 GB+ / Apple Silicon 16 GB+ | `qwen3:8b` | `qwen2.5vl:7b` |
 
 Discrete NVIDIA GPU: size by VRAM, not system RAM. A 12-16 GB VRAM card plays in the
-32 GB+ row regardless of system RAM.
+32 GB+ row regardless of system RAM. If their RAM row and VRAM row disagree, the VRAM
+row wins; say that explicitly, it's a common confusion.
 
-For the empirical answer, point them at `llmfit` (`brew install llmfit`, or a release
-from github.com/AlexsJones/llmfit): it detects their RAM, CPU, and GPU, scores 200+
+For the empirical answer, point them at `llmfit` (`brew install llmfit` on mac/Linux;
+on Windows grab the release binary from github.com/AlexsJones/llmfit): it detects
+their RAM, CPU, and GPU, scores 200+
 models on quality, speed, fit, and context, and estimates tokens/sec before they
 download anything. Its model database can lag the newest releases, so if it recommends
 something older than the table, turn that into the comprehension check: ask them why a
@@ -91,12 +95,28 @@ Walk them through, one command at a time, with predictions:
    as Mac/Linux-only tonight.
 3. The key moment. Before they run it, ask: *"What do you think this URL is
    imitating, and why would that matter?"*
+
+   mac / Linux / WSL:
    ```
    curl http://localhost:11434/v1/chat/completions -d '{"model":"<model>","messages":[{"role":"user","content":"say hi"}]}'
+   ```
+   PowerShell (important: `curl` there is an alias for Invoke-WebRequest and the
+   command above will fail with a parameter error; use one of these instead):
+   ```
+   curl.exe http://localhost:11434/v1/chat/completions -d '{\"model\":\"<model>\",\"messages\":[{\"role\":\"user\",\"content\":\"say hi\"}]}'
+   ```
+   or
+   ```
+   Invoke-RestMethod -Method Post http://localhost:11434/v1/chat/completions -ContentType 'application/json' -Body '{"model":"<model>","messages":[{"role":"user","content":"say hi"}]}'
    ```
    Gate: they should be able to say some version of *"anything that speaks the OpenAI
    API can point at my machine instead of the cloud. That's how a local model becomes
    a product."* That sentence is the thesis of the session; don't move on without it.
+
+   Two things to preempt so nothing looks broken: qwen3 is a thinking model, so its
+   first reply starts with a visible wall of self-reasoning (that's a feature; cloud
+   UIs hide it; `/set nothink` in the ollama REPL disables it). And if £ signs or
+   emoji render as garbage in the Windows console, `chcp 65001` fixes the encoding.
 
 ## Step 3: Session exercises (follow the presenters' pacing)
 
@@ -167,4 +187,6 @@ How to guide this stage:
 - Machine swapping/frozen: model too big. `ollama ps`, then next size down.
 - TTS unbearably slow: CPU-only machine. `--engine piper` on the TTS tracks, or
   `--text-only` (morning_briefing.py only).
+- uv errors with "No interpreter found for Python >=3.14": run `uv python install 3.14`
+  once (or upgrade uv); the repo pins 3.14.
 - Out of time: the scripts are self-documenting; finishing at home counts.
