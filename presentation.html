@@ -6,14 +6,15 @@
 <title>Open Models & Post-Training</title>
 <style>
   :root {
-    --bg-deep: #0f1219;
+    --bg-deep: #0d1017;
     --bg-slide: #161b26;
-    --text-primary: #f0ebe3;
-    --text-secondary: #9aa0a8;
-    --accent-gold: #c9a96e;
-    --accent-sage: #8b9a7d;
-    --accent-rose: #b88a8a;
-    --border-subtle: rgba(201, 169, 110, 0.15);
+    --text-primary: #f2ede4;
+    --text-secondary: #aab3bf;
+    --text-bullet: #d6d1c8;
+    --accent-gold: #d4b077;
+    --accent-sage: #97a888;
+    --accent-rose: #c49595;
+    --border-subtle: rgba(212, 176, 119, 0.18);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,9 +38,11 @@
   .slide {
     display: none;
     width: 100%; height: 100%;
-    padding: 5vh 8vw;
+    /* One centred 1160px content column so slides no longer pile into the left edge */
+    padding: 6vh max(6vw, calc((100vw - 1160px) / 2));
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
     position: relative;
   }
 
@@ -48,101 +51,124 @@
   .slide-number {
     position: absolute;
     bottom: 3vh; right: 5vw;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    opacity: 0.5;
-    letter-spacing: 0.1em;
+    opacity: 0.55;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
   .part-label {
     position: absolute;
-    top: 4vh; left: 5vw;
-    font-size: 0.65rem;
+    top: 4.5vh; left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.78rem;
+    font-weight: 600;
     color: var(--accent-gold);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    opacity: 0.7;
+    opacity: 0.85;
+    white-space: nowrap;
   }
 
   h1 {
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    font-weight: 300;
-    line-height: 1.1;
+    font-size: clamp(3rem, 6vw, 5.2rem);
+    font-weight: 250;
+    line-height: 1.08;
     margin-bottom: 0.3em;
     letter-spacing: -0.02em;
   }
 
   h1 strong {
-    font-weight: 600;
+    font-weight: 650;
     color: var(--accent-gold);
   }
 
   h2 {
-    font-size: clamp(1.8rem, 3.5vw, 3rem);
-    font-weight: 400;
-    line-height: 1.2;
-    margin-bottom: 0.8em;
+    font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.12;
+    margin-bottom: 0.55em;
+    letter-spacing: -0.015em;
     color: var(--text-primary);
   }
 
   h2 .accent { color: var(--accent-gold); }
 
-  .subtitle {
-    font-size: clamp(1rem, 1.5vw, 1.3rem);
-    color: var(--text-secondary);
-    font-weight: 300;
-    max-width: 55ch;
-    line-height: 1.6;
-    margin-bottom: 2em;
+  h2::after {
+    content: "";
+    display: block;
+    width: 78px; height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent-gold), transparent);
+    margin-top: 0.4em;
   }
 
-  .bullets {
-    list-style: none;
-    max-width: 50ch;
+  .subtitle {
+    font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+    color: var(--text-secondary);
+    font-weight: 350;
+    max-width: 62ch;
+    line-height: 1.55;
+    margin-bottom: 1.6em;
   }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92em;
+    background: rgba(212, 176, 119, 0.1);
+    border: 1px solid rgba(212, 176, 119, 0.16);
+    border-radius: 6px;
+    padding: 0.08em 0.45em;
+  }
+
+  .bullets { list-style: none; }
 
   .bullets li {
-    font-size: clamp(1rem, 1.4vw, 1.25rem);
-    line-height: 1.7;
-    color: var(--text-secondary);
-    margin-bottom: 0.9em;
-    padding-left: 1.5em;
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    line-height: 1.55;
+    color: var(--text-bullet);
+    margin-bottom: 0.85em;
+    padding-left: 1.4em;
+    max-width: 42em;
     position: relative;
   }
 
   .bullets li::before {
     content: "";
     position: absolute;
-    left: 0; top: 0.55em;
-    width: 6px; height: 6px;
-    border-radius: 50%;
+    left: 0; top: 0.52em;
+    width: 9px; height: 9px;
+    border-radius: 2px;
+    transform: rotate(45deg);
     background: var(--accent-gold);
-    opacity: 0.6;
+    opacity: 0.85;
   }
+
+  .bullets strong { color: var(--text-primary); font-weight: 650; }
 
   .two-col {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4vw;
+    gap: 3.5vw;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1160px;
   }
 
   .col h3 {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.15rem;
+    font-weight: 650;
     color: var(--accent-gold);
     margin-bottom: 0.6em;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   .col p, .col li {
-    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    font-size: clamp(1.05rem, 1.35vw, 1.3rem);
     color: var(--text-secondary);
     line-height: 1.6;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.55em;
   }
 
   .col ul { list-style: none; }
@@ -152,48 +178,51 @@
     position: absolute;
     left: 0;
     color: var(--accent-sage);
-    opacity: 0.5;
+    opacity: 0.7;
   }
 
   .big-stat {
-    font-size: clamp(3rem, 6vw, 5rem);
-    font-weight: 200;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 250;
     color: var(--accent-gold);
     line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   .stat-label {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    margin-top: 0.5em;
+    margin-top: 0.6em;
   }
 
   .stats-row {
     display: flex;
-    gap: 4vw;
-    margin-top: 2em;
+    gap: 5vw;
+    margin-top: 1.6em;
   }
 
   .stat-item { text-align: center; }
 
   .divider {
-    width: 60px;
-    height: 2px;
+    width: 64px;
+    height: 3px;
+    border-radius: 2px;
     background: var(--accent-gold);
-    opacity: 0.4;
-    margin: 1.5em 0;
+    opacity: 0.55;
+    margin: 1.4em 0;
   }
 
   .tag {
     display: inline-block;
-    padding: 0.3em 0.8em;
+    padding: 0.38em 1em;
     border: 1px solid var(--border-subtle);
     border-radius: 100px;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
     color: var(--accent-sage);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     margin-right: 0.5em;
     margin-bottom: 0.5em;
   }
@@ -201,27 +230,48 @@
   .compare {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3vw;
+    gap: 2.5vw;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1160px;
   }
 
   .compare-box {
+    background: rgba(22, 27, 38, 0.55);
     border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 2em;
+    border-radius: 14px;
+    padding: 2.2em 2.4em;
   }
 
   .compare-box h3 {
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: 1.15rem;
+    font-weight: 650;
     margin-bottom: 1em;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   .compare-box.open h3 { color: var(--accent-sage); }
   .compare-box.closed h3 { color: var(--accent-rose); }
+  .compare-box.open { border-color: rgba(151, 168, 136, 0.4); }
+  .compare-box.closed { border-color: rgba(196, 149, 149, 0.4); }
+
+  .compare-box ul { list-style: none; }
+  .compare-box li {
+    font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+    color: var(--text-bullet);
+    line-height: 1.6;
+    margin-bottom: 0.5em;
+    padding-left: 1.2em;
+    position: relative;
+  }
+  .compare-box li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    opacity: 0.6;
+  }
+  .compare-box.open li::before { color: var(--accent-sage); }
+  .compare-box.closed li::before { color: var(--accent-rose); }
 
   .nav {
     position: fixed;
@@ -263,23 +313,23 @@
   .hw-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    font-size: 1.05rem;
+    color: var(--text-bullet);
     margin-top: 0.5em;
   }
   .hw-table th {
     text-align: left;
-    padding: 0.5em 0.6em;
+    padding: 0.55em 0.7em;
     border-bottom: 1px solid var(--border-subtle);
     color: var(--accent-gold);
-    font-weight: 500;
+    font-weight: 650;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    font-size: 0.8rem;
   }
   .hw-table td {
-    padding: 0.5em 0.6em;
-    border-bottom: 1px solid rgba(201, 169, 110, 0.08);
+    padding: 0.55em 0.7em;
+    border-bottom: 1px solid rgba(212, 176, 119, 0.1);
     vertical-align: top;
     line-height: 1.5;
   }
