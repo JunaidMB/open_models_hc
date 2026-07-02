@@ -1,7 +1,7 @@
 """Shared TTS helper for the podcast and briefing tracks.
 
 Uses the same Qwen3-TTS model as notebooks/local_tts.ipynb. Needs a GPU (CUDA)
-or Apple Silicon (MPS) — on a CPU-only laptop, generation will be painfully
+or Apple Silicon (MPS). On a CPU-only laptop, generation will be painfully
 slow. CPU fallback: `uv pip install piper-tts` and pass --engine piper.
 """
 

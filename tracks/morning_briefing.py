@@ -1,4 +1,4 @@
-"""Morning Briefing — a local LLM reads your day to you before you've opened a screen.
+"""Morning Briefing: a local LLM reads your day to you before you've opened a screen.
 
 Track difficulty: ★★★ advanced combo (LLM + TTS + a scheduler = ambient product)
 
@@ -9,7 +9,7 @@ Weather is fetched from wttr.in if you're online; skipped gracefully if not.
 
     python morning_briefing.py --city London
 
-Make it ambient — schedule it:
+Make it ambient by scheduling it:
     Linux/mac:  crontab -e   ->   55 7 * * *  cd <here> && python morning_briefing.py
     Windows:    Task Scheduler -> Daily 07:55 -> python morning_briefing.py
 """
@@ -29,7 +29,7 @@ PROMPT = (
     "You are a personal morning-briefing writer. Using the context below, write a "
     "spoken script of at most 150 words: greet briefly, then weather in one sentence, "
     "then today's commitments in priority order, then one encouraging closing line. "
-    "Plain prose only — it will be read aloud by a TTS model.\n\nToday is {date}.\n\n{context}"
+    "Plain prose only; it will be read aloud by a TTS model.\n\nToday is {date}.\n\n{context}"
 )
 
 
@@ -44,7 +44,7 @@ def gather_context(city: str) -> str:
         for f in sorted(SOURCES.glob("*")):
             parts.append(f"--- {f.name} ---\n{f.read_text(encoding='utf-8')[:2000]}")
     else:
-        parts.append("(No sources/ folder found — briefing will be generic.)")
+        parts.append("(No sources/ folder found; briefing will be generic.)")
     return "\n\n".join(parts)
 
 
@@ -68,7 +68,7 @@ def main() -> None:
         out = Path(f"briefing-{datetime.now():%Y-%m-%d}.wav")
         print("Synthesising speech...")
         speak(script, out, engine=args.engine, voice="A bright, friendly radio host, medium pace.")
-        print(f"Saved {out} — play it, or wire the script to your speakers.")
+        print(f"Saved {out}. Play it, or wire the script to your speakers.")
 
 
 if __name__ == "__main__":

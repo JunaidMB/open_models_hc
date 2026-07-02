@@ -1,4 +1,4 @@
-"""Private Podcast — turn any article into an episode in a podcast feed only you can hear.
+"""Private Podcast: turn any article into an episode in a podcast feed only you can hear.
 
 Track difficulty: ★★★ (needs Ollama + the repo's TTS setup, GPU/MPS recommended)
 

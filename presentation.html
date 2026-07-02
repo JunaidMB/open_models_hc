@@ -316,12 +316,12 @@
 <div class="slide">
   <div class="part-label">Tonight</div>
   <h2>Aims & <span class="accent">Outcomes</span></h2>
-  <p class="subtitle">Laptops out. By 8pm you will have run real models on your own machine — and shipped something you'll still use tomorrow.</p>
+  <p class="subtitle">Laptops out. By 8pm you will have run real models on your own machine and shipped something you'll still use tomorrow.</p>
   <ul class="bullets">
-    <li><strong>Understand the trade-offs</strong> — open vs. closed weights, local vs. cloud compute</li>
-    <li><strong>Right-size to your hardware</strong> — pick models that actually fit your RAM and GPU</li>
-    <li><strong>Run three modalities locally</strong> — an LLM, speech-to-text, and text-to-speech</li>
-    <li><strong>Leave with a product, not a notebook</strong> — every closed AI subscription is a candidate for replacement; you'll build one tonight</li>
+    <li><strong>Understand the trade-offs:</strong> open vs. closed weights, local vs. cloud compute</li>
+    <li><strong>Right-size to your hardware:</strong> pick models that actually fit your RAM and GPU</li>
+    <li><strong>Run three modalities locally:</strong> an LLM, speech-to-text, and text-to-speech</li>
+    <li><strong>Leave with a product, not a notebook:</strong> every closed AI subscription is a candidate for replacement; you'll build one tonight</li>
   </ul>
   <div style="margin-top:1.5em">
     <span class="tag">Hands-on</span>
@@ -457,17 +457,17 @@
 <div class="slide">
   <div class="part-label">Part I — Open Models</div>
   <h2>The <span class="accent">Unified Memory</span> Exception</h2>
-  <p class="subtitle">Apple Silicon collapses the two memory worlds into one — and there's a tool to check where your machine lands.</p>
+  <p class="subtitle">Apple Silicon collapses the two memory worlds into one. The win is capacity, not speed.</p>
   <div class="two-col" style="max-width:1000px">
     <div class="col">
       <h3>M-series Macs</h3>
-      <p>CPU and GPU share one pool of unified memory. A 32 GB MacBook can dedicate ~24 GB to a model at GPU speed — territory that needs a serious discrete GPU on a PC.</p>
-      <p style="margin-top:0.8em">This is why MacBooks punch far above their weight for local inference.</p>
+      <p>CPU and GPU share one memory pool. A 64+ GB Mac loads 70B models that fit on no consumer GPU.</p>
+      <p style="margin-top:0.8em">The trade-off is speed. Decode is bandwidth-bound: 273 GB/s (M4 Pro) to 546 GB/s (M4 Max) vs ~1 TB/s on an RTX 4090, so like-for-like models run 2-3x slower, and prompt processing (compute-bound) is slower still. Capacity, not speed.</p>
     </div>
     <div class="col">
-      <h3>Know before you pull: <code style="color:var(--accent-gold)">lm-fit</code></h3>
-      <p>A terminal tool that scores models by expected tokens/sec for <em>your</em> hardware.</p>
-      <p style="margin-top:0.8em">Run it before downloading gigabytes — pick the largest model that stays interactive, not the largest that technically loads.</p>
+      <h3>Know before you pull: <code style="color:var(--accent-gold)">llmfit</code></h3>
+      <p><code style="color:var(--accent-gold)">brew install llmfit</code>. Detects your RAM, CPU, and GPU, then scores 200+ models on quality, speed, fit, and context. Picks the best quantization and estimates tokens/sec before you download anything.</p>
+      <p style="margin-top:0.8em">Pick the largest model that stays interactive, not the largest that technically loads.</p>
     </div>
   </div>
   <div class="slide-number">08 / 29</div>
@@ -498,12 +498,12 @@
 <div class="slide">
   <div class="part-label">Part I — Open Models</div>
   <h2>The <span class="accent">Product Seam</span></h2>
-  <p class="subtitle">How does a local model become a product? Rarely by building an app around a model — usually by slotting the model into software that already exists.</p>
+  <p class="subtitle">How does a local model become a product? Rarely by building an app around a model. Usually by slotting the model into software that already exists.</p>
   <ul class="bullets">
-    <li>Ollama serves <code style="color:var(--accent-gold)">http://localhost:11434/v1</code> — the same protocol as OpenAI</li>
+    <li>Ollama serves <code style="color:var(--accent-gold)">http://localhost:11434/v1</code>, the same protocol as OpenAI</li>
     <li>Thousands of tools and libraries speak that protocol: <strong>change the base URL, and they run on your machine</strong></li>
     <li>Your own products are small scripts with one shape: <strong>trigger → model → artifact</strong></li>
-    <li>Every closed service you pay for is this seam, waiting to be applied — tonight's final activity</li>
+    <li>Every closed service you pay for is this seam waiting to be applied. It's tonight's final activity</li>
   </ul>
   <div style="margin-top:1.5em">
     <span class="tag">OpenAI-compatible API</span>
@@ -610,7 +610,7 @@
   <div class="two-col" style="max-width:800px">
     <div class="col">
       <h3>Vision (multimodal LLMs)</h3>
-      <p><code style="color:var(--accent-gold)">ollama run qwen2.5vl:3b</code> — drag an image in, ask about it. Live demo.</p>
+      <p><code style="color:var(--accent-gold)">ollama run qwen2.5vl:3b</code>: drag an image in, ask about it. Live demo.</p>
       <h3 style="margin-top:1em">Speech</h3>
       <p>Local Whisper via <code style="color:var(--accent-gold)">transformers</code></p>
     </div>
@@ -618,10 +618,10 @@
       <h3>TTS</h3>
       <p>Qwen3TTS, Parler TTS</p>
       <h3 style="margin-top:1em">Images</h3>
-      <p><code style="color:var(--accent-gold)">diffusers</code> — Stable Diffusion, Flux</p>
+      <p><code style="color:var(--accent-gold)">diffusers</code>: Stable Diffusion, Flux</p>
     </div>
   </div>
-  <p class="subtitle" style="margin-top:1.5em">Pattern: understanding modalities (vision, ASR) are small and CPU-friendly — generation modalities want a GPU.</p>
+  <p class="subtitle" style="margin-top:1.5em">Pattern: understanding modalities (vision, ASR) are small and CPU-friendly. Generation modalities want a GPU.</p>
   <div class="slide-number">15 / 29</div>
 </div>
 
@@ -751,14 +751,14 @@
 <div class="slide">
   <div class="part-label">Activity — Part I</div>
   <h2>Hands-on: Ship <span class="accent">Something</span></h2>
-  <p class="subtitle">Pick ONE track from <code style="color:var(--accent-gold)">tracks/</code> — each is a small end-to-end product that replaces a paid service, built from the models you've already set up tonight.</p>
+  <p class="subtitle">Pick ONE track from <code style="color:var(--accent-gold)">tracks/</code>. Each is a small end-to-end product that replaces a paid service, built from the models you've already set up tonight.</p>
   <ul class="bullets">
-    <li><strong>★ screenshot_librarian.py</strong> — a local VLM names, tags & indexes your screenshots <em>(Ollama only)</em></li>
-    <li><strong>★★ media_indexer.py</strong> — transcribe a folder of audio into a searchable index <em>(Whisper; per-minute APIs → £0)</em></li>
-    <li><strong>★★★ private_podcast.py</strong> — any article → spoken episode → private podcast feed on your LAN <em>(LLM + TTS)</em></li>
-    <li><strong>★★★ morning_briefing.py</strong> — calendar, todos & weather → a spoken daily briefing <em>(LLM + TTS + cron)</em></li>
+    <li><strong>★ screenshot_librarian.py</strong>: a local VLM names, tags & indexes your screenshots <em>(Ollama only)</em></li>
+    <li><strong>★★ media_indexer.py</strong>: transcribe a folder of audio into a searchable index <em>(Whisper; per-minute APIs → £0)</em></li>
+    <li><strong>★★★ private_podcast.py</strong>: any article → spoken episode → private podcast feed on your LAN <em>(LLM + TTS)</em></li>
+    <li><strong>★★★ morning_briefing.py</strong>: calendar, todos & weather → a spoken daily briefing <em>(LLM + TTS + cron)</em></li>
   </ul>
-  <p class="subtitle" style="margin-top:1.5em"><strong>Stretch — make it ambient:</strong> <code style="color:var(--accent-gold)">--watch</code> flags, cron / Task Scheduler. The recipe is always the same: <strong>trigger → small model → artifact</strong>.</p>
+  <p class="subtitle" style="margin-top:1.5em"><strong>Stretch, make it ambient:</strong> <code style="color:var(--accent-gold)">--watch</code> flags, cron / Task Scheduler. The recipe is always the same: <strong>trigger → small model → artifact</strong>.</p>
   <div class="slide-number">22 / 29</div>
 </div>
 

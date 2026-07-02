@@ -1,4 +1,4 @@
-"""Media-Library Indexer — transcribe every audio file in a folder into a searchable index.
+"""Media-Library Indexer: transcribe every audio file in a folder into a searchable index.
 
 Track difficulty: ★★ (needs the repo's Python env: transformers + librosa)
 
@@ -66,7 +66,7 @@ def main() -> None:
             lines.append(f"**[{int(start // 60):02d}:{int(start % 60):02d}]** {chunk['text'].strip()}\n")
         (out_dir / f"{f.stem}.md").write_text("\n".join(lines), encoding="utf-8")
         with index.open("a", encoding="utf-8") as idx:
-            idx.write(f"- [{f.name}](transcripts/{f.stem}.md) — {summarise(result['text'])}\n")
+            idx.write(f"- [{f.name}](transcripts/{f.stem}.md): {summarise(result['text'])}\n")
         print(f"  -> transcripts/{f.stem}.md")
 
     print(f"\nDone. Search your library: grep -ri <term> {out_dir}")

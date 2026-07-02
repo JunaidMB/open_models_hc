@@ -1,4 +1,4 @@
-"""Screenshot Librarian — a local VLM names, tags, and indexes your screenshots.
+"""Screenshot Librarian: a local VLM names, tags, and indexes your screenshots.
 
 Track difficulty: ★ beginner (needs only Ollama + a vision model)
 
@@ -52,7 +52,7 @@ def process_folder(folder: Path, index: Path) -> int:
         new_path = image.with_name(f"{stamp}--{slug}{image.suffix.lower()}")
         image.rename(new_path)
         with index.open("a", encoding="utf-8") as f:
-            f.write(f"- `{new_path.name}` — {tags}\n")
+            f.write(f"- `{new_path.name}`: {tags}\n")
         print(f"  {image.name}  ->  {new_path.name}   [{tags}]")
         processed += 1
     return processed
