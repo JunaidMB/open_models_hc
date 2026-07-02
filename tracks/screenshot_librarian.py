@@ -47,7 +47,11 @@ def process_folder(folder: Path, index: Path) -> int:
     for image in sorted(folder.iterdir()):
         if image.suffix.lower() not in IMAGE_EXTS or DONE_MARKER.match(image.name):
             continue
-        slug, tags = describe(image)
+        try:
+            slug, tags = describe(image)
+        except Exception as e:
+            print(f"  {image.name}: model failed ({e}), skipping")
+            continue
         stamp = datetime.fromtimestamp(image.stat().st_mtime).strftime("%Y-%m-%d")
         new_path = image.with_name(f"{stamp}--{slug}{image.suffix.lower()}")
         image.rename(new_path)

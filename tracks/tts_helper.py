@@ -39,7 +39,13 @@ def speak_qwen(text: str, out_path: Path, voice: str = "A warm, clear narrator w
 def speak_piper(text: str, out_path: Path) -> Path:
     """CPU-friendly fallback (~50 MB model, real-time on any laptop)."""
     import subprocess
+    import sys
 
+    if not list(Path.cwd().glob("en_GB-alba-medium.onnx")):
+        subprocess.run(
+            [sys.executable, "-m", "piper.download_voices", "en_GB-alba-medium"],
+            check=True,
+        )
     subprocess.run(
         ["piper", "--model", "en_GB-alba-medium", "--output_file", str(out_path)],
         input=text.encode(),
