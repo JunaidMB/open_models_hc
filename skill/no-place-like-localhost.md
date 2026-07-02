@@ -101,20 +101,28 @@ Walk them through, one command at a time, with predictions:
 ## Step 3: Session exercises (follow the presenters' pacing)
 
 For each, the pattern is: predict, run, compare, one comprehension check, artifact.
+The slides label these Activity A through E; use the same letters so the attendee can
+match what the presenters are saying.
 
-1. **Ollama + API** (`notebooks/ollama_openai_api.ipynb`): after basic chat, have them
-   attempt one structured-output call, messy text in and valid JSON out. Let them write
-   the prompt; critique it rather than replacing it.
-2. **Coding harness**: they point Qwen Code / Continue.dev at `localhost:11434`, then
-   swap model sizes. Ask them to predict the latency/quality trade-off before swapping.
-3. **ASR** (`notebooks/local_transcription.ipynb`): they record a real voice memo on
-   their phone and transcribe it. Check: *"why is this small model fast even on CPU
-   when the chat model wasn't?"* (sub-1B params).
-4. **TTS** (`notebooks/local_tts.ipynb`): design a voice, synthesise a paragraph they
-   care about. On CPU-only machines, tell them honestly it will crawl and offer
+1. **Activity A, Ollama + API** (`notebooks/ollama_openai_api.ipynb`): after basic
+   chat, have them attempt one structured-output call, messy text in and valid JSON
+   out. Let them write the prompt; critique it rather than replacing it.
+2. **Activity B, coding harness**: they install OpenCode (opencode.ai) and launch it
+   in a small repo. Ollama models plug into OpenCode's CLI interface; help them select
+   their model (if OpenCode doesn't list it, help them add the Ollama provider in
+   OpenCode's config, but let them edit it). They run the model they sized for their
+   machine on a real task: explain a file, make a small change. Then have them
+   compare tokens/sec with a neighbour running a different model or machine, and ask
+   them to explain the difference before you do.
+3. **Activity C, ASR** (`notebooks/local_transcription.ipynb`): they record a real
+   voice memo on their phone and transcribe it. Check: *"why is this small model fast
+   even on CPU when the chat model wasn't?"* (sub-1B params).
+   The TTS half (`notebooks/local_tts.ipynb`): design a voice, synthesise a paragraph
+   they care about. On CPU-only machines, tell them honestly it will crawl and offer
    `piper-tts`. Ask them what trade-off they're making by switching.
+   (Activity D, image generation on a GPU, is optional and presenter-led.)
 
-## Step 4: Ship something (the point of tonight)
+## Step 4: Ship something (Activity E, the point of tonight)
 
 Present the four tracks in `tracks/`, each a small end-to-end product replacing a paid
 service. They pick ONE. Ask what they'd actually use, not what sounds impressive:

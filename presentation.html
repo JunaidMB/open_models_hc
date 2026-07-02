@@ -307,6 +307,16 @@
 
   .activity-footer strong { color: var(--accent-gold); font-weight: 650; }
 
+  .hands-on-kicker {
+    display: block;
+    font-size: 0.42em;
+    font-weight: 700;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 0.4em;
+  }
+
   .anchor-caption {
     color: var(--accent-gold);
     font-weight: 700;
@@ -434,7 +444,7 @@
 
 <!-- Slide 2: Open vs Closed -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">The Open Model Landscape</div>
   <h2>Open vs. <span class="accent">Closed</span> Models</h2>
   <div class="compare">
     <div class="compare-box open">
@@ -461,7 +471,7 @@
 
 <!-- Slide 3: Local vs Cloud -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">The Open Model Landscape</div>
   <h2>Local <span class="accent">and</span> Cloud Open Models</h2>
   <div class="two-col">
     <div class="col">
@@ -488,7 +498,7 @@
 
 <!-- Slide 4: Hugging Face -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">The Open Model Landscape</div>
   <h2>The <span class="accent">Hugging Face</span> Hub</h2>
   <p class="subtitle">The de facto repository for open ML. Browse hundreds of thousands of models, datasets, and training scripts.</p>
   <ul class="bullets">
@@ -502,7 +512,7 @@
 
 <!-- Slide 5: Hardware Sizing -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Fit Your Hardware</div>
   <h2>Model Memory <span class="accent">≈</span> Params × Precision</h2>
   <div class="stats-row">
     <div class="stat-item">
@@ -524,7 +534,7 @@
 
 <!-- Slide 6: Hardware Table -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Fit Your Hardware</div>
   <h2>Two Different Memory Worlds</h2>
   <p class="subtitle">System RAM is shared with the OS. GPU VRAM is dedicated to compute.</p>
   <div class="two-col" style="max-width:1100px; align-items:start">
@@ -556,7 +566,7 @@
 
 <!-- Slide: Apple Unified Memory & lm-fit -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Fit Your Hardware</div>
   <h2>The <span class="accent">Unified Memory</span> Exception</h2>
   <p class="subtitle">Apple Silicon collapses the two memory worlds into one. The win is capacity, not speed.</p>
   <div class="two-col" style="max-width:1000px">
@@ -576,7 +586,7 @@
 
 <!-- Slide: Right-size with llmfit -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Fit Your Hardware</div>
   <h2>Right-Size with <span class="accent">llmfit</span></h2>
   <p class="subtitle">Know what your machine can actually run before you download gigabytes. One command; works on macOS, Windows, and Linux.</p>
   <ul class="bullets">
@@ -595,7 +605,7 @@
 
 <!-- Slide 7: Inference Servers -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Serving Models</div>
   <h2>Inference <span class="accent">Servers</span></h2>
   <p class="subtitle">An HTTP wrapper around the model that handles KV-cache allocation, batching, token streaming, and memory management.</p>
   <div class="two-col" style="max-width:900px">
@@ -618,7 +628,7 @@
 
 <!-- Slide: The Product Seam -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Local Models as Products</div>
   <h2>From Local Model to <span class="accent">Product</span></h2>
   <p class="subtitle">Rarely by building an app around a model. Usually by slotting the model into software that already exists.</p>
   <ul class="bullets">
@@ -637,8 +647,8 @@
 
 <!-- Activity Slide A1: Ollama Hands-on -->
 <div class="slide activity">
-  <div class="part-label">Activity — Part I</div>
-  <h2>Hands-on: Run a Model with <span class="accent">Ollama</span></h2>
+  <div class="part-label">Activity A</div>
+  <h2><span class="hands-on-kicker">Hands-on</span>Run a Model with <span class="accent">Ollama</span></h2>
   <p class="subtitle">Go from zero to a working local LLM in minutes.</p>
   <ul class="bullets">
     <li>Install Ollama, pull a small model <code style="color:var(--accent-gold)">ollama run qwen2.5:3b</code></li>
@@ -657,7 +667,7 @@
 
 <!-- Slide 8: Quantization -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Fit Your Hardware</div>
   <h2>Model <span class="accent">Quantization</span></h2>
   <p class="subtitle">Map 32-bit weights onto a smaller discrete set. The single most important technique for consumer hardware.</p>
   <ul class="bullets">
@@ -671,7 +681,7 @@
 
 <!-- Slide 9: LLM Harnesses -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Agents & Harnesses</div>
   <h2>LLM <span class="accent">Harnesses</span></h2>
   <p class="subtitle">The orchestration layer that turns a raw LLM into an autonomous agent. Not the model — the loop.</p>
   <div class="two-col">
@@ -694,41 +704,39 @@
       </ul>
     </div>
   </div>
-  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
   <div class="slide-number">14 / 30</div>
 </div>
 
 <!-- Activity Slide A2: Coding Harness -->
 <div class="slide activity">
-  <div class="part-label">Activity — Part I</div>
-  <h2>Hands-on: Coding Harness <span class="accent">vs</span> Model Size</h2>
-  <p class="subtitle">Observe how latency and quality trade off as you swap models behind the same harness.</p>
+  <div class="part-label">Activity B</div>
+  <h2><span class="hands-on-kicker">Hands-on</span>Coding Harness <span class="accent">vs</span> Model Size</h2>
+  <p class="subtitle">Put a local model behind a real coding agent and find out what your machine can actually drive.</p>
   <div class="two-col">
     <div class="col">
       <h3>Setup</h3>
-      <p>Install an open coding harness (e.g., Continue.dev or Qwen Code) and point it at the Ollama backend.</p>
+      <p>Install <a href="https://opencode.ai" style="color:var(--accent-gold)">OpenCode</a> and launch it inside a small repo. Your Ollama models plug straight into its CLI interface.</p>
       <ul>
-        <li>Configure the harness to use <code style="color:var(--accent-gold)">localhost:11434</code></li>
-        <li>Open a small codebase in your IDE</li>
+        <li>Pick your Ollama model from OpenCode's model list</li>
+        <li>Choose the model you sized for your machine earlier</li>
       </ul>
     </div>
     <div class="col">
       <h3>Experiment</h3>
-      <p>Switch the harness between model sizes and compare:</p>
+      <p>Give it a real task: explain a file, then make a small change.</p>
       <ul>
-        <li>3B model — latency vs correctness</li>
-        <li>7B model — balanced quality</li>
-        <li>8B model — best accuracy, higher RAM</li>
+        <li>Note your tokens/sec and whether the change compiles</li>
+        <li>Compare with a neighbour on a different setup: bigger model or faster machine, who wins?</li>
       </ul>
     </div>
   </div>
-  <p class="subtitle" style="margin-top:1.5em">Note the tokens-per-second and whether completions actually compile or require manual fixes.</p>
+  <div class="activity-footer"><strong>Go at your own pace:</strong> finding this easy? Jump ahead to another activity, or keep building one you started earlier. Stuck? We're walking the room, just wave.</div>
   <div class="slide-number">15 / 30</div>
 </div>
 
 <!-- Slide 10: Multimodal -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Multimodal</div>
   <h2>Beyond <span class="accent">Text</span></h2>
   <p class="subtitle">Vision-language models run straight from Ollama. For generation modalities, use your GPU directly via Python SDKs.</p>
   <div class="two-col" style="max-width:800px">
@@ -751,8 +759,8 @@
 
 <!-- Activity Slide A3: Speech & TTS -->
 <div class="slide activity">
-  <div class="part-label">Activity — Part I</div>
-  <h2>Hands-on: Local <span class="accent">Speech</span> & TTS</h2>
+  <div class="part-label">Activity C</div>
+  <h2><span class="hands-on-kicker">Hands-on</span>Local <span class="accent">Speech</span> & TTS</h2>
   <p class="subtitle">Transcribe audio and synthesise speech using open models.</p>
   <div class="two-col">
     <div class="col">
@@ -779,7 +787,7 @@
 
 <!-- Slide 11: Cloud Scaling -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Scaling Up</div>
   <h2>Scaling to the <span class="accent">Cloud</span></h2>
   <p class="subtitle">When local inference hits a ceiling, open weights let you shop for compute.</p>
   <ul class="bullets">
@@ -792,7 +800,7 @@
 
 <!-- Slide 12: Smaller Models -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Right-Sizing</div>
   <h2>The Virtues of <span class="accent">Smaller</span> Models</h2>
   <p class="subtitle">Use the smallest model that satisfies your quality bar. 3B–8B models are often smarter than frontier models for narrow tasks.</p>
   <div class="stats-row">
@@ -814,7 +822,7 @@
 
 <!-- Slide 13: GPU Provisioning -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Scaling Up</div>
   <h2>Provisioning <span class="accent">More</span> GPUs</h2>
   <div class="two-col" style="max-width:1000px">
     <div class="col">
@@ -835,8 +843,8 @@
 
 <!-- Activity Slide A4: Image Generation -->
 <div class="slide activity">
-  <div class="part-label">Activity — Part I</div>
-  <h2>Hands-on: Generate <span class="accent">Images</span> on GPU</h2>
+  <div class="part-label">Activity D</div>
+  <h2><span class="hands-on-kicker">Hands-on</span>Generate <span class="accent">Images</span> on GPU</h2>
   <p class="subtitle">Provision a GPU and synthesise an image from prompt to pixels.</p>
   <ul class="bullets">
     <li>Open a Google Colab notebook (free T4 GPU tier) or use a local Metal/CUDA machine you already have</li>
@@ -855,14 +863,14 @@
 
 <!-- Slide 14: Open Alternatives -->
 <div class="slide">
-  <div class="part-label">Part I — Open Models</div>
+  <div class="part-label">Local Models as Products</div>
   <h2>Open <span class="accent">Alternatives</span></h2>
   <p class="subtitle">Closed services monetize convenience. Open weights give you customization, privacy, and long-term savings.</p>
   <div class="two-col" style="max-width:1000px">
     <div class="col">
       <p><strong style="color:var(--accent-rose)">Wispr Flow</strong> → <strong style="color:var(--accent-sage)">Handy</strong></p>
       <p><strong style="color:var(--accent-rose)">Granola</strong> → <strong style="color:var(--accent-sage)">OpenOats</strong></p>
-      <p style="font-size:0.78em; color:var(--text-secondary); margin-top:-0.4em; margin-left:0.2em">made by Yazine, someone in our community. Feel free to Google him.</p>
+      <p style="font-size:0.78em; color:var(--text-secondary); margin-top:-0.4em; margin-left:0.2em">Made by <a href="https://github.com/yazinsai" style="color:var(--accent-sage); text-decoration:underline; text-underline-offset:3px">Yazin</a>, someone from our community</p>
       <p><strong style="color:var(--accent-rose)">ElevenLabs</strong> → <strong style="color:var(--accent-sage)">Qwen3TTS</strong></p>
     </div>
     <div class="col">
@@ -876,8 +884,8 @@
 
 <!-- Activity Slide A5: Replace a Closed Service -->
 <div class="slide activity">
-  <div class="part-label">Activity — Part I</div>
-  <h2>Hands-on: Ship <span class="accent">Something</span></h2>
+  <div class="part-label">Activity E</div>
+  <h2><span class="hands-on-kicker">Hands-on</span>Ship <span class="accent">Something</span></h2>
   <p class="subtitle">Pick ONE track from <code style="color:var(--accent-gold)">tracks/</code>. Each is a small end-to-end product that replaces a paid service, built from the models you've already set up tonight.</p>
   <ul class="bullets">
     <li><strong>★ screenshot_librarian.py</strong>: a local VLM names, tags & indexes your screenshots <em>(Ollama only)</em></li>
@@ -892,7 +900,7 @@
 
 <!-- Slide 15: Post-Training Intro -->
 <div class="slide" style="background:var(--bg-deep)">
-  <div class="part-label">Part II — Post-Training</div>
+  <div class="part-label">Post-Training</div>
   <h2>What Is <span class="accent">Post-Training?</span></h2>
   <p class="subtitle">Pre-training gives you a fluent but unaligned base model. Post-training turns it into a useful assistant.</p>
   <div class="two-col">
@@ -918,7 +926,7 @@
 
 <!-- Slide 16: SFT -->
 <div class="slide">
-  <div class="part-label">Part II — Post-Training</div>
+  <div class="part-label">Post-Training</div>
   <h2>Supervised <span class="accent">Fine-Tuning</span></h2>
   <p class="subtitle">Maximize the log-likelihood of high-quality (instruction, response) pairs.</p>
   <div style="border:1px solid var(--border-subtle); border-radius:12px; padding:1.5em 2em; margin:1em 0; max-width:600px">
@@ -935,7 +943,7 @@
 
 <!-- Slide 17: The Need for RL -->
 <div class="slide">
-  <div class="part-label">Part II — Post-Training</div>
+  <div class="part-label">Post-Training</div>
   <h2>The Need for <span class="accent">Reinforcement Learning</span></h2>
   <p class="subtitle">Replace fixed labels with a reward signal. The model explores many responses and learns to favour those that score highly.</p>
   <div class="two-col">
@@ -963,7 +971,7 @@
 
 <!-- Slide 18: RLVR & GRPO -->
 <div class="slide">
-  <div class="part-label">Part II — Post-Training</div>
+  <div class="part-label">Post-Training</div>
   <h2>RLVR <span class="accent">&</span> GRPO</h2>
   <p class="subtitle">Reinforcement Learning with Verifiable Rewards. No learned reward model — just ground truth.</p>
   <div class="two-col">
@@ -993,7 +1001,7 @@
 
 <!-- Slide 19: GGUF & Ollama -->
 <div class="slide">
-  <div class="part-label">Part II — Post-Training</div>
+  <div class="part-label">Post-Training</div>
   <h2>GGUF <span class="accent">→</span> Ollama</h2>
   <p class="subtitle">Closing the loop: export your fine-tuned model and run it locally.</p>
   <ul class="bullets">
@@ -1023,8 +1031,8 @@
 
 <!-- Activity Slide A6: Stretch Post-Training -->
 <div class="slide activity">
-  <div class="part-label">Activity — Part II</div>
-  <h2>Stretch: <span class="accent">Fine-Tune</span> & Deploy</h2>
+  <div class="part-label">Activity F</div>
+  <h2><span class="hands-on-kicker">Take-home</span><span class="accent">Fine-Tune</span> & Deploy</h2>
   <p class="subtitle">Finish at home. Follow <code style="color:var(--accent-gold)">docs/post_training_unsloth.md</code> to close the full loop.</p>
   <ul class="bullets">
     <li><strong>Task A — SFT:</strong> pick a model and dataset, run supervised fine-tuning with Unsloth, export to GGUF, create an Ollama Modelfile, and chat with it via the local API</li>
