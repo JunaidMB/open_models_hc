@@ -49,26 +49,33 @@ Earlier verification on the same machine (simulated attendee run):
 - Skill flow end to end, Windows/WSL split guidance, powershell.exe interop.
 - Python-to-Ollama round trip Windows-side via `uv run --no-project --with ollama`.
 - `screenshot_librarian.py` fails cleanly and correctly when Ollama is unreachable.
-- Known repo issue: `uv sync` FAILS on native Windows because `qwen3-tts` pulls in
-  `mlx` (no Windows wheels). The skill routes Windows attendees around it.
 
-NOT yet verified anywhere (this is the macOS test list, ~30-45 min):
-1. `uv venv && uv sync` on macOS (mlx has darwin wheels, so it should pass; confirm).
-2. The TTS path on Apple Silicon (MPS): run `notebooks/local_tts.ipynb`, then
-   `tracks/private_podcast.py` on a short article. `tts_helper.py` handles the
-   generate_voice_design return shape defensively; confirm audio actually plays.
-3. `tracks/screenshot_librarian.py` end to end against a live Ollama
-   (`ollama pull qwen2.5vl:3b`, drop one screenshot in a test folder).
-4. `tracks/morning_briefing.py --text-only`, then with TTS.
-5. The skill as an attendee: install it
-   (`mkdir -p ~/.claude/commands && cp skill/no-place-like-localhost.md ~/.claude/commands/`),
-   open a fresh Claude Code session, invoke it, and role-play a mac attendee through
-   Steps 0-2 and one track. The Windows path was tested this way; the mac path wasn't.
-6. Deck on the actual projector resolution if available; otherwise trust the 1080p
-   overflow checks already done.
+macOS verification, 2 July afternoon (M-series MacBook, the demo machine):
+1. `uv venv && uv sync` PASSES on macOS, and now on native Windows too. The old
+   failure (`qwen3-tts` pulling `mlx`, no Windows wheels) is fixed at the root:
+   `pyproject.toml` now depends on `qwen-tts` (the PyTorch package the code
+   actually imports) with `transformers==4.57.3`, and drops `qwen3-tts`, which
+   nothing imported. transformers 5.x breaks qwen-tts's model load; do not
+   re-raise the pin without testing TTS.
+2. TTS on Apple Silicon (MPS) PASSES: Qwen3-TTS VoiceDesign generated real,
+   audible audio in ~39s cold (model load included), ~12s of speech. Note: torch
+   from PyPI on native Windows is CPU-only, so Windows TTS stays on piper.
+3. `screenshot_librarian.py` PASSES against live Ollama + qwen2.5vl:3b (renamed,
+   tagged, indexed a real screenshot).
+4. `morning_briefing.py --text-only` PASSES (live weather + calendar + todos all
+   in the script). Full-TTS run and `private_podcast.py` in progress.
+5. `tests/smoke.py`: all six mechanical tests pass on macOS.
+
+Still open:
+- The skill as an attendee on mac: install it
+  (`mkdir -p ~/.claude/commands && cp skill/no-place-like-localhost.md ~/.claude/commands/`),
+  open a fresh Claude Code session, invoke it, and role-play a mac attendee through
+  Steps 0-2 and one track. The Windows path was tested this way; the mac path wasn't.
+- Deck on the actual projector resolution if available; otherwise trust the 1080p
+  overflow checks already done.
 
 Do all model pulls (qwen3:4b, qwen2.5vl:3b, Whisper small, Qwen3-TTS 1.7B) on home
-WiFi the night before. Venue WiFi is for attendees.
+WiFi the night before. Venue WiFi is for attendees. (Done on the MacBook, 2 July.)
 
 ## One-shot prefetch (run on home WiFi, walk away)
 
@@ -84,8 +91,8 @@ ollama pull qwen3:4b
 ollama pull qwen2.5vl:3b
 ollama pull qwen3:1.7b        # fallback for demoing the weak-machine path
 
-# Python env + HF model weights (~5 GB)
-uv venv && uv sync && uv pip install -U qwen-tts
+# Python env + HF model weights (~5 GB); qwen-tts is a declared dependency now
+uv venv && uv sync
 uv run python -c "from transformers import pipeline; pipeline('automatic-speech-recognition', model='openai/whisper-small')"
 uv run python -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign')"
 ```
@@ -99,8 +106,8 @@ Code installed for the skill test.
 
 - Junaid to answer the LFM question on PR #2 and review/merge.
 - Optional post-workshop: convert the three local notebooks to marimo (assessed as
-  worthwhile, PEP 723 inline deps would fix the Windows uv sync issue properly);
-  fix `pyproject.toml` so `qwen3-tts`/`mlx` is darwin-only or an optional extra.
+  worthwhile; PEP 723 inline deps would isolate each notebook's environment).
+  The `qwen3-tts`/`mlx` pyproject issue is already fixed (2 July).
 - Companion skill distribution: QR code to wherever the skill is hosted
   (luqmaan.dev/skills/ pattern from the previous Agents Assemble session, or raw
   GitHub URL of this branch).

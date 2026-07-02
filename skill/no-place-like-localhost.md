@@ -94,12 +94,12 @@ run slower.) If they can't answer, explain it. It's on the presenters' slides to
 
 Walk them through, one command at a time, with predictions:
 1. Install Ollama from ollama.com, then `ollama run <their chosen model>`.
-2. Clone the repo, `uv venv && uv sync && uv pip install -U qwen-tts` (activation per OS above).
-   **Windows warning:** `uv sync` currently fails on native Windows because the TTS
-   dependency pulls in `mlx`, which has no Windows wheels. Windows attendees should
-   skip `uv sync` and install per-exercise deps instead: `uv pip install ollama`
-   covers the chat exercises and the ★ track; treat the TTS notebook and TTS tracks
-   as Mac/Linux-only tonight.
+2. Clone the repo, `uv venv && uv sync` (activation per OS above). Verified passing
+   on macOS and native Windows; everything the notebooks import, including
+   `qwen-tts`, comes with it.
+   **Windows TTS note:** torch installs CPU-only on Windows from PyPI, so the Qwen
+   TTS notebook and tracks will crawl there. Windows attendees do TTS with
+   `--engine piper` (fast on CPU); Qwen voice design is the Mac/Linux/GPU path.
 3. The key moment. Before they run it, ask: *"What do you think this URL is
    imitating, and why would that matter?"*
 

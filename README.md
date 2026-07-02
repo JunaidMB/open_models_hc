@@ -51,7 +51,6 @@ Create a virtual environment and install dependencies with [uv](https://docs.ast
 uv venv
 source .venv/bin/activate
 uv sync
-uv pip install -U qwen-tts
 ```
 
 On Windows:
@@ -60,5 +59,4 @@ On Windows:
 uv venv
 .venv\Scripts\activate
 uv sync
-uv pip install -U qwen-tts
 ```
