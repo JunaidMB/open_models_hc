@@ -210,7 +210,7 @@ One of the quietest revolutions in open models is the emergence of open-weight r
 | **Whisper (API)** | Cloud speech-to-text | **openwhispr** / local Whisper | Run the same Whisper model locally; identical accuracy, zero API cost |
 | **ElevenLabs** | High-quality text-to-speech | **Qwen3TTS** / Parler TTS | Open TTS models are improving rapidly; fine-tuning on your own voice data is possible only with open weights |
 | **Midjourney** | AI image generation | **Stable Diffusion** / **Flux** | Download a checkpoint and generate unlimited images locally via `diffusers` |
-| **GitHub Copilot** | AI code completion | **Continue.dev** + local models | Pair Ollama with an open code model like LFM 2.5 or Qwen 2.5 Coder for IDE autocomplete |
+| **GitHub Copilot** | AI code completion | **OpenCode** + local models | Pair Ollama with an open code model like LFM 2.5 or Qwen 2.5 Coder inside the OpenCode CLI |
 | **ChatGPT** | General chat assistant | **Ollama** + LFM / Qwen / Mistral | The most direct replacement; you lose the polished UI but gain privacy and cost control |
 
 The pattern is consistent: closed services monetize convenience, but the underlying models are increasingly open and interchangeable. The open path requires more setup, but the ceiling on customization, privacy, and long-term cost savings is higher.
