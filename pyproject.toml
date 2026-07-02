@@ -5,14 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "accelerate>=1.14.0",
+    "accelerate>=1.12.0",
     "diffusers>=0.38.0",
     "huggingface>=0.0.1",
     "ipykernel>=7.3.0",
     "librosa>=0.11.0",
     "ollama>=0.6.2",
     "python-dotenv>=1.2.2",
-    "qwen3-tts>=0.1.2",
+    "qwen-tts>=0.1.1",
+    # qwen-tts (the PyTorch package the TTS notebook and tracks import) pins
+    # transformers==4.57.3; transformers 5.x breaks its model load.
+    "transformers==4.57.3",
     "torch>=2.12.1",
-    "transformers>=5.12.1",
 ]
