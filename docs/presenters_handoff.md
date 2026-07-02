@@ -34,7 +34,18 @@ skill/no-place-like-localhost.md".
 
 ## Test status: what has and hasn't been verified
 
-Verified on a WSL2 + Windows Ollama + RTX 4080 machine (simulated attendee run):
+Overnight persona testing (see tests/: three attendee personas run live on WSL2 +
+Windows Ollama + RTX 4080; reports in tests/persona_reports/, all found bugs fixed
+and regression-tested in tests/smoke.py):
+- Beginner (Sara): Activities A, C, E(*) pass; PowerShell curl trap and librarian
+  silent-failure fixed
+- Builder (Maya): all three audio pipelines pass end to end Windows-side with piper;
+  RSS absolute-URL bug fixed; piper-tts confirmed installing on native Windows
+- Speedrunner (Deen): OpenCode installs in minutes (config now shipped at
+  docs/opencode.example.json); five-star tier achievable in ~20 min; --watch
+  collision crash, poison-image retry loop, and missing num_predict cap fixed
+
+Earlier verification on the same machine (simulated attendee run):
 - Skill flow end to end, Windows/WSL split guidance, powershell.exe interop.
 - Python-to-Ollama round trip Windows-side via `uv run --no-project --with ollama`.
 - `screenshot_librarian.py` fails cleanly and correctly when Ollama is unreachable.

@@ -788,18 +788,18 @@
   <div class="two-col">
     <div class="col">
       <h3>Setup</h3>
-      <p>Install <a href="https://opencode.ai" style="color:var(--accent-gold)">OpenCode</a> and launch it inside a small repo. Your Ollama models plug straight into its CLI interface.</p>
+      <p>Install <a href="https://opencode.ai" style="color:var(--accent-gold)">OpenCode</a>, launch it in a small repo, and add the Ollama provider config from <code style="color:var(--accent-gold)">docs/opencode.example.json</code> (local models aren't auto-discovered).</p>
       <ul>
-        <li>Pick your Ollama model from OpenCode's model list</li>
-        <li>Choose the model you sized for your machine earlier</li>
+        <li>Run: <code style="color:var(--accent-gold)">opencode run -m ollama/&lt;model&gt; "explain main.py"</code></li>
+        <li>Use the model you sized for your machine earlier</li>
       </ul>
     </div>
     <div class="col">
       <h3>Experiment</h3>
-      <p>Give it a real task: explain a file, then make a small change.</p>
+      <p>Small models fumble agent work. Observing <em>how</em> is the exercise.</p>
       <ul>
-        <li>Note your tokens/sec and whether the change compiles</li>
-        <li>Compare with a neighbour on a different setup: bigger model or faster machine, who wins?</li>
+        <li>Did it read the file (a real tool call) or confidently hallucinate an answer? Note the tokens/sec</li>
+        <li>Compare with a neighbour on a bigger model: who gets a grounded answer?</li>
       </ul>
     </div>
   </div>

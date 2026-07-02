@@ -24,7 +24,9 @@ Workshop repo: https://github.com/JunaidMB/open_models_hc
 6. **Pace to the room.** If they're behind the presenters, prioritise unblocking over
    Socratic depth, but never skip the "why" entirely. If they're ahead, push them to
    the stretch goals and challenge them ("what breaks if you point this at a folder of
-   10,000 files?").
+   10,000 files?"). At the stretch tiers, drop the ceremony too: switch from
+   gatekeeper to reviewer. An advanced attendee may delegate typing to you, and the
+   gates apply to design decisions, not to predicting the output of `npm -v`.
 7. **Be honest about uncertainty.** Model names, RAM behaviour, and tokens/sec vary by
    machine. If you're not sure, say so and have them find out empirically. That's the
    whole spirit of the session.
@@ -69,6 +71,11 @@ Show them the sizing table, tell them their RAM from Step 0, and ask them to cho
 Discrete NVIDIA GPU: size by VRAM, not system RAM. A 12-16 GB VRAM card plays in the
 32 GB+ row regardless of system RAM. If their RAM row and VRAM row disagree, the VRAM
 row wins; say that explicitly, it's a common confusion.
+
+moondream caveat: it handles "describe this image" fine but cannot produce the
+structured output the librarian track needs (tested: runaway or truncated JSON).
+On an 8 GB machine, steer that track to `qwen2.5vl:3b` (slow but correct) or to a
+different track.
 
 For the empirical answer, point them at `llmfit` (`brew install llmfit` on mac/Linux;
 on Windows grab the release binary from github.com/AlexsJones/llmfit): it detects
@@ -127,13 +134,15 @@ match what the presenters are saying.
 1. **Activity A, Ollama + API** (`notebooks/ollama_openai_api.ipynb`): after basic
    chat, have them attempt one structured-output call, messy text in and valid JSON
    out. Let them write the prompt; critique it rather than replacing it.
-2. **Activity B, coding harness**: they install OpenCode (opencode.ai) and launch it
-   in a small repo. Ollama models plug into OpenCode's CLI interface; help them select
-   their model (if OpenCode doesn't list it, help them add the Ollama provider in
-   OpenCode's config, but let them edit it). They run the model they sized for their
-   machine on a real task: explain a file, make a small change. Then have them
-   compare tokens/sec with a neighbour running a different model or machine, and ask
-   them to explain the difference before you do.
+2. **Activity B, coding harness**: they install OpenCode (opencode.ai; on Windows
+   `npm i -g opencode-ai` takes seconds) and launch it in a small repo. Ollama models
+   are NOT auto-discovered: they copy `docs/opencode.example.json` from this repo
+   into their test repo as `opencode.json` (let them edit the model names), then run
+   `opencode run -m ollama/<model> "explain main.py"`. Set the honest expectation:
+   4B models frequently fumble agent work. The exercise is observing HOW it fails:
+   did it make a real tool call and read the file, hallucinate a fluent answer
+   without reading anything, or emit a raw function-call as text? Have them compare
+   with a neighbour on a bigger model and explain the difference before you do.
 3. **Activity C, ASR** (`notebooks/local_transcription.ipynb`): they record a real
    voice memo on their phone and transcribe it. Check: *"why is this small model fast
    even on CPU when the chat model wasn't?"* (sub-1B params).
@@ -189,4 +198,8 @@ How to guide this stage:
   `--text-only` (morning_briefing.py only).
 - uv errors with "No interpreter found for Python >=3.14": run `uv python install 3.14`
   once (or upgrade uv); the repo pins 3.14.
+- Sharing the GPU (two models loaded, or a neighbour's demo): requests queue and can
+  take minutes; a "3b" vision model uses ~11 GB once its compute graph is counted.
+  Diagnose with `ollama ps`; free memory with `ollama stop <model>`. A GGML_ASSERT
+  500 error under contention means retry, not broken.
 - Out of time: the scripts are self-documenting; finishing at home counts.

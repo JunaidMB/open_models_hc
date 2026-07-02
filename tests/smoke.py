@@ -54,9 +54,55 @@ def test_briefing_prompt_mentions_todos():
     print("ok: briefing prompt covers calendar and todos")
 
 
+def test_librarian_dedupes_collisions():
+    """Two same-day screenshots with the same slug must never overwrite or crash."""
+    import screenshot_librarian as sl
+
+    original_describe = sl.describe
+    sl.describe = lambda image: ("same-name", "tag-a, tag-b")
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            folder = Path(td)
+            (folder / "shot_a.png").write_bytes(b"fake png a")
+            (folder / "shot_b.png").write_bytes(b"fake png b")
+            n = sl.process_folder(folder, folder / "index.md", {})
+            assert n == 2, f"expected 2 processed, got {n}"
+            names = sorted(p.name for p in folder.glob("*.png"))
+            assert len(names) == 2 and names[0] != names[1], names
+            assert any(name.endswith("-2.png") for name in names), names
+    finally:
+        sl.describe = original_describe
+    print("ok: librarian dedupes same-slug collisions")
+
+
+def test_librarian_gives_up_on_poison_images():
+    import screenshot_librarian as sl
+
+    original_describe = sl.describe
+
+    def always_fails(image):
+        raise ValueError("poison")
+
+    sl.describe = always_fails
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            folder = Path(td)
+            (folder / "bad.png").write_bytes(b"fake png")
+            failures = {}
+            for _ in range(5):
+                sl.process_folder(folder, folder / "index.md", failures)
+            assert failures["bad.png"] == 3, failures
+            assert (folder / "bad.png").exists(), "poison image must keep its name"
+    finally:
+        sl.describe = original_describe
+    print("ok: librarian stops retrying poison images after 3 attempts")
+
+
 if __name__ == "__main__":
     test_all_tracks_compile()
     test_feed_uses_absolute_urls()
     test_lan_ip_returns_address()
     test_briefing_prompt_mentions_todos()
+    test_librarian_dedupes_collisions()
+    test_librarian_gives_up_on_poison_images()
     print("\nAll smoke tests passed.")

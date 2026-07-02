@@ -50,6 +50,7 @@ def describe(image: Path) -> tuple[str, str]:
         model=MODEL,
         messages=[{"role": "user", "content": PROMPT, "images": [str(image)]}],
         format=SCHEMA,
+        options={"num_predict": 120},  # small VLMs can free-run for minutes without a cap
     )
     data = json.loads(response.message.content)
     slug = re.sub(r"[^a-z0-9-]+", "-", str(data.get("name", "")).lower()).strip("-")
@@ -61,19 +62,35 @@ def describe(image: Path) -> tuple[str, str]:
     return slug[:60], tags
 
 
-def process_folder(folder: Path, index: Path) -> int:
+def unique_path(image: Path, stamp: str, slug: str) -> Path:
+    # Two screenshots of the same app on the same day produce the same slug;
+    # never overwrite (or crash on) an earlier one
+    candidate = image.with_name(f"{stamp}--{slug}{image.suffix.lower()}")
+    n = 2
+    while candidate.exists():
+        candidate = image.with_name(f"{stamp}--{slug}-{n}{image.suffix.lower()}")
+        n += 1
+    return candidate
+
+
+def process_folder(folder: Path, index: Path, failures: dict[str, int]) -> int:
     processed = 0
     for image in sorted(folder.iterdir()):
         if image.suffix.lower() not in IMAGE_EXTS or DONE_MARKER.match(image.name):
             continue
+        if failures.get(image.name, 0) >= 3:
+            continue  # poison image; already gave up this session
         try:
             slug, tags = describe(image)
+            stamp = datetime.fromtimestamp(image.stat().st_mtime).strftime("%Y-%m-%d")
+            new_path = unique_path(image, stamp, slug)
+            image.rename(new_path)
         except Exception as e:
-            print(f"  {image.name}: model failed ({e}), skipping")
+            failures[image.name] = failures.get(image.name, 0) + 1
+            tries = failures[image.name]
+            suffix = "; giving up on it this session" if tries >= 3 else ""
+            print(f"  {image.name}: failed ({e}); attempt {tries}/3{suffix}")
             continue
-        stamp = datetime.fromtimestamp(image.stat().st_mtime).strftime("%Y-%m-%d")
-        new_path = image.with_name(f"{stamp}--{slug}{image.suffix.lower()}")
-        image.rename(new_path)
         with index.open("a", encoding="utf-8") as f:
             f.write(f"- `{new_path.name}`: {tags}\n")
         print(f"  {image.name}  ->  {new_path.name}   [{tags}]")
@@ -88,9 +105,10 @@ def main() -> None:
     args = parser.parse_args()
 
     index = args.folder / "index.md"
+    failures: dict[str, int] = {}
     print(f"Librarian on duty in {args.folder} (model: {MODEL})")
     while True:
-        n = process_folder(args.folder, index)
+        n = process_folder(args.folder, index, failures)
         if n:
             print(f"Filed {n} screenshot(s). Search them: grep -i <term> {index}")
         if not args.watch:
