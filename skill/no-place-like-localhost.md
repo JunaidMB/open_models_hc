@@ -42,9 +42,12 @@ Determine, then confirm with the attendee in one line:
   so it can use the GPU.
 - If their terminal is WSL, they can still drive the Windows side without switching
   terminals: `powershell.exe -Command "ollama list"` runs the Windows Ollama from
-  inside WSL. Python for the notebooks should then also run Windows-side
-  (`powershell.exe`), or they set up networking so WSL can reach `localhost:11434`
-  (Windows 11 mirrored networking). Recommend the powershell.exe route tonight.
+  inside WSL. But that only covers CLI commands. Python must ALSO run Windows-side to
+  reach Ollama; the fastest route is a minimal env, e.g.
+  `powershell.exe -Command "uv run --no-project --with ollama python tracks\screenshot_librarian.py <folder>"`.
+  Alternatives if they want WSL-side Python: Windows 11 mirrored networking
+  (`networkingMode=mirrored` in `.wslconfig`), or set `OLLAMA_HOST=0.0.0.0` on the
+  Windows side and use the host IP from WSL.
 - venv activation differs: `.venv\Scripts\activate` (Windows) vs `source .venv/bin/activate`.
 
 Then ask your opening probe: *"What's your mental model of what happens when you type
@@ -61,10 +64,15 @@ Show them the sizing table, tell them their RAM from Step 0, and ask them to cho
 | 16 GB | `qwen3:4b` or `llama3.2:3b` | `qwen2.5vl:3b` |
 | 32 GB+ / Apple Silicon 16 GB+ | `qwen3:8b` | `qwen2.5vl:7b` |
 
+Discrete NVIDIA GPU: size by VRAM, not system RAM. A 12-16 GB VRAM card plays in the
+32 GB+ row regardless of system RAM.
+
 For the empirical answer, point them at `llmfit` (`brew install llmfit`, or a release
 from github.com/AlexsJones/llmfit): it detects their RAM, CPU, and GPU, scores 200+
 models on quality, speed, fit, and context, and estimates tokens/sec before they
-download anything. Have them compare its recommendation to the table.
+download anything. Its model database can lag the newest releases, so if it recommends
+something older than the table, turn that into the comprehension check: ask them why a
+2023 model might score well on "fit" yet still be the wrong choice.
 
 Check their reasoning: *"Why can an M-series Mac go a size up from an equivalent PC?"*
 (Unified memory: the GPU sees all the RAM. But note the trade-off honestly if asked:
@@ -76,6 +84,11 @@ run slower.) If they can't answer, explain it. It's on the presenters' slides to
 Walk them through, one command at a time, with predictions:
 1. Install Ollama from ollama.com, then `ollama run <their chosen model>`.
 2. Clone the repo, `uv venv && uv sync && uv pip install -U qwen-tts` (activation per OS above).
+   **Windows warning:** `uv sync` currently fails on native Windows because the TTS
+   dependency pulls in `mlx`, which has no Windows wheels. Windows attendees should
+   skip `uv sync` and install per-exercise deps instead: `uv pip install ollama`
+   covers the chat exercises and the ★ track; treat the TTS notebook and TTS tracks
+   as Mac/Linux-only tonight.
 3. The key moment. Before they run it, ask: *"What do you think this URL is
    imitating, and why would that matter?"*
    ```
@@ -129,8 +142,13 @@ How to guide this stage:
 ## Troubleshooting (give these freely; logistics aren't pedagogy)
 
 - `connection refused` on 11434: Ollama isn't running (`ollama serve`), or they're in
-  WSL talking to Windows Ollama. Use `powershell.exe -Command "..."` (see Step 0).
+  WSL talking to Windows Ollama. `powershell.exe -Command "..."` unblocks CLI commands
+  only; Python needs to run Windows-side too (minimal env one-liner in Step 0), or
+  mirrored networking / `OLLAMA_HOST=0.0.0.0` for WSL-side Python.
+- Nothing happens for 30-60 s after the first prompt: the model is loading into
+  memory, not hung. Check `ollama ps`; subsequent prompts will be fast.
 - Venue WiFi too slow for a model download: drop one model size; exercise is identical.
 - Machine swapping/frozen: model too big. `ollama ps`, then next size down.
-- TTS unbearably slow: CPU-only machine. `--engine piper` or `--text-only`.
+- TTS unbearably slow: CPU-only machine. `--engine piper` on the TTS tracks, or
+  `--text-only` (morning_briefing.py only).
 - Out of time: the scripts are self-documenting; finishing at home counts.
