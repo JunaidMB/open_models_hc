@@ -22,6 +22,7 @@ import re
 import socket
 import sys
 import urllib.request
+from urllib.parse import quote
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
@@ -65,10 +66,11 @@ def write_feed(base: str) -> None:
     items = []
     for wav in sorted(PODCAST_DIR.glob("*.wav"), reverse=True):
         pub = datetime.fromtimestamp(wav.stat().st_mtime, tz=timezone.utc)
+        url = f"{base}/{quote(wav.name)}"  # spaces in a URI break podcast apps
         items.append(
             f"<item><title>{html.escape(wav.stem)}</title>"
-            f"<enclosure url='{base}/{wav.name}' type='audio/wav' length='{wav.stat().st_size}'/>"
-            f"<guid>{base}/{wav.name}</guid><pubDate>{format_datetime(pub)}</pubDate></item>"
+            f"<enclosure url='{url}' type='audio/wav' length='{wav.stat().st_size}'/>"
+            f"<guid>{url}</guid><pubDate>{format_datetime(pub)}</pubDate></item>"
         )
     feed = (
         "<?xml version='1.0' encoding='UTF-8'?><rss version='2.0'><channel>"
@@ -96,7 +98,7 @@ def main() -> None:
     print(f"Rewriting for audio with {LLM} (first call loads the model; 30-120s is normal)...")
     script = chat(model=LLM, messages=[{"role": "user", "content": REWRITE_PROMPT + text}]).message.content
 
-    title = args.title or re.sub(r"[^a-z0-9-]+", "-", script.split(".")[0].lower())[:50].strip("-")
+    title = re.sub(r"[^a-z0-9-]+", "-", (args.title or script.split(".")[0]).lower())[:50].strip("-")
     out = PODCAST_DIR / f"{datetime.now():%Y-%m-%d}-{title}.wav"
     print("Synthesising speech (first run downloads the TTS model)...")
     speak(script, out, engine=args.engine)
