@@ -159,7 +159,8 @@ How to guide this stage:
 - `connection refused` on 11434: Ollama isn't running (`ollama serve`), or they're in
   WSL talking to Windows Ollama. `powershell.exe -Command "..."` unblocks CLI commands
   only; Python needs to run Windows-side too (minimal env one-liner in Step 0), or
-  mirrored networking / `OLLAMA_HOST=0.0.0.0` for WSL-side Python.
+  mirrored networking / `OLLAMA_HOST=0.0.0.0` for WSL-side Python. For the TTS tracks
+  add `--with piper-tts` to the one-liner; piper installs fine on Windows (verified).
 - Nothing happens for 30-60 s after the first prompt: the model is loading into
   memory, not hung. Check `ollama ps`; subsequent prompts will be fast.
 - Venue WiFi too slow for a model download: drop one model size; exercise is identical.

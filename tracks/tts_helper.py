@@ -18,7 +18,12 @@ def speak_qwen(text: str, out_path: Path, voice: str = "A warm, clear narrator w
     from qwen_tts import Qwen3TTSModel
 
     if _qwen_model is None:
-        device = "cuda" if torch.cuda.is_available() else "mps"
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            raise SystemExit("No CUDA or Apple Silicon GPU found. Rerun with --engine piper (CPU-friendly).")
         _qwen_model = Qwen3TTSModel.from_pretrained(
             snapshot_download("Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"),
             device_map=torch.device(device),
@@ -41,15 +46,19 @@ def speak_piper(text: str, out_path: Path) -> Path:
     import subprocess
     import sys
 
-    if not list(Path.cwd().glob("en_GB-alba-medium.onnx")):
+    # Anchor the voice next to this file so it downloads once, not once per cwd
+    voice_home = Path(__file__).resolve().parent
+    if not list(voice_home.glob("en_GB-alba-medium.onnx")):
         subprocess.run(
             [sys.executable, "-m", "piper.download_voices", "en_GB-alba-medium"],
             check=True,
+            cwd=voice_home,
         )
     subprocess.run(
-        ["piper", "--model", "en_GB-alba-medium", "--output_file", str(out_path)],
+        ["piper", "--model", "en_GB-alba-medium", "--output_file", str(Path(out_path).resolve())],
         input=text.encode(),
         check=True,
+        cwd=voice_home,
     )
     return out_path
 

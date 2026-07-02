@@ -6,25 +6,33 @@ Why local wins here: transcription APIs charge per minute. Ten years of voice
 memos, lecture recordings, or podcast backlogs cost £0 overnight on your own CPU.
 
     python media_indexer.py ./media
+    python media_indexer.py ./media --model openai/whisper-tiny   # much faster; ideal in a live workshop
 
 Outputs transcripts/<name>.md per file plus a master index.md.
 Stretch: add an Ollama one-line summary per file; run nightly via cron/Task Scheduler.
 """
 
 import argparse
+import warnings
 from pathlib import Path
 
+warnings.filterwarnings("ignore")
+
 from transformers import pipeline
+from transformers import logging as hf_logging
+
+hf_logging.set_verbosity_error()
 
 AUDIO_EXTS = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".mp4"}
 
 
-def build_transcriber():
+def build_transcriber(model: str):
     # Same model family as notebooks/local_transcription.ipynb; the pipeline
     # handles long recordings by chunking, which the raw processor does not.
+    print(f"Loading {model} (first run downloads it)...")
     return pipeline(
         "automatic-speech-recognition",
-        model="openai/whisper-small",
+        model=model,
         chunk_length_s=30,
         return_timestamps=True,
     )
@@ -44,6 +52,8 @@ def summarise(text: str) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("folder", type=Path, help="folder of audio/video files")
+    parser.add_argument("--model", default="openai/whisper-small",
+                        help="whisper-small for quality; openai/whisper-tiny is far faster on CPU")
     args = parser.parse_args()
 
     out_dir = args.folder / "transcripts"
@@ -56,7 +66,7 @@ def main() -> None:
     if not todo:
         return
 
-    transcriber = build_transcriber()
+    transcriber = build_transcriber(args.model)
     for f in todo:
         print(f"Transcribing {f.name} ...")
         result = transcriber(str(f))

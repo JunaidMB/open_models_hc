@@ -8,6 +8,9 @@ Run once over a folder:
     python screenshot_librarian.py ~/Pictures/Screenshots
 
 Make it ambient (stretch): add --watch and leave it running.
+
+WSL terminal but Ollama on Windows? Run Windows-side (verified):
+    powershell.exe -Command "cd <folder with this script>; uv run --no-project --with ollama python screenshot_librarian.py <folder>"
 """
 
 import argparse

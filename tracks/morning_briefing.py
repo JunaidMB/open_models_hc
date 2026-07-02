@@ -12,6 +12,9 @@ Weather is fetched from wttr.in if you're online; skipped gracefully if not.
 Make it ambient by scheduling it:
     Linux/mac:  crontab -e   ->   55 7 * * *  cd <here> && python morning_briefing.py
     Windows:    Task Scheduler -> Daily 07:55 -> python morning_briefing.py
+
+WSL terminal but Ollama on Windows? Run Windows-side (verified):
+    powershell.exe -Command "cd <folder with these scripts>; uv run --no-project --with ollama --with piper-tts python morning_briefing.py --engine piper"
 """
 
 import argparse
@@ -27,8 +30,9 @@ SOURCES = Path(__file__).parent / "sources"
 
 PROMPT = (
     "You are a personal morning-briefing writer. Using the context below, write a "
-    "spoken script of at most 150 words: greet briefly, then weather in one sentence, "
-    "then today's commitments in priority order, then one encouraging closing line. "
+    "spoken script of at most 170 words: greet briefly, then weather in one sentence, "
+    "then today's calendar commitments in order, then the two most important todo items. "
+    "Close with one encouraging line. "
     "Plain prose only; it will be read aloud by a TTS model.\n\nToday is {date}.\n\n{context}"
 )
 
@@ -57,7 +61,7 @@ def main() -> None:
 
     context = gather_context(args.city)
     today = datetime.now().strftime("%A %d %B %Y")
-    print(f"Writing briefing with {LLM}...")
+    print(f"Writing briefing with {LLM} (first call loads the model; 30-120s is normal)...")
     script = chat(
         model=LLM,
         messages=[{"role": "user", "content": PROMPT.format(date=today, context=context)}],
