@@ -59,6 +59,31 @@ NOT yet verified anywhere (this is the macOS test list, ~30-45 min):
 Do all model pulls (qwen3:4b, qwen2.5vl:3b, Whisper small, Qwen3-TTS 1.7B) on home
 WiFi the night before. Venue WiFi is for attendees.
 
+## One-shot prefetch (run on home WiFi, walk away)
+
+Roughly 12-15 GB total. From the repo root on the MacBook:
+
+```bash
+# Tools (skip any already installed)
+brew install ollama llmfit
+curl -fsSL https://opencode.ai/install | bash   # or: npm i -g opencode-ai
+
+# Ollama models (fetches in sequence; ~9 GB)
+ollama pull qwen3:4b
+ollama pull qwen2.5vl:3b
+ollama pull qwen3:1.7b        # fallback for demoing the weak-machine path
+
+# Python env + HF model weights (~5 GB)
+uv venv && uv sync && uv pip install -U qwen-tts
+uv run python -c "from transformers import pipeline; pipeline('automatic-speech-recognition', model='openai/whisper-small')"
+uv run python -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign')"
+```
+
+Notes: the TTS snapshot may need a Hugging Face token (`cp .env_example .env`, add
+`HUGGINGFACEHUB_API_TOKEN`, or `huggingface-cli login`) if the repo is gated. Also
+download Handy (handy.computer) for the Wispr Flow replacement demo, and have Claude
+Code installed for the skill test.
+
 ## Remaining open items
 
 - Junaid to answer the LFM question on PR #2 and review/merge.
