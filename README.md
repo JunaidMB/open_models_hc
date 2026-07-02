@@ -8,6 +8,12 @@ A practical guide to running, understanding, and fine-tuning open-weight languag
 - **`docs/post_training_unsloth.md`** — An explainer on post-training: SFT, reinforcement learning with verifiable rewards (RLVR), and Group Relative Policy Optimization (GRPO) using [Unsloth](https://unsloth.ai).
 - **`docs/activities_links.md`** — Curated links and references for each hands-on activity in the slide deck (Ollama setup, coding harnesses, TTS, open alternatives, and Colab notebooks).
 - **`presentation.html`** — An interactive slide deck summarizing both guides.
+- **`tracks/`** — Four "ship something" starter scripts for the final activity. Each is a small end-to-end product that replaces a paid service, built on the same stack as the notebooks:
+  - ★ `screenshot_librarian.py` — a local VLM names, tags, and indexes your screenshots (needs Ollama only)
+  - ★★ `media_indexer.py` — transcribe a folder of audio into a searchable index with Whisper
+  - ★★★ `private_podcast.py` — any article → local LLM rewrite → Qwen TTS → a private podcast feed on your LAN
+  - ★★★ `morning_briefing.py` — calendar, todos, and weather → a spoken daily briefing (add cron to make it ambient)
+- **`skill/no-place-like-localhost.md`** — A companion skill for attendees' coding agents (Claude Code / OpenCode). It detects their OS/RAM/GPU (including the Windows-vs-WSL split), then guides them through model sizing, setup, the exercises, and the tracks Socratically — questions and decisions, not done-for-you commands.
 - **`.env_example`** — Template for API keys (Hugging Face, Weights & Biases).
 - **`notebooks/`** — Runnable examples:
   - `image_generation_diffusers.ipynb` — Generate images from text prompts using diffusion models via [Lightning AI](https://lightning.ai/junaid-trusting-personal/vision-model/studios/qwen-ts/code). Requires GPU credits. Or run locally on a sufficiently powerful machine by switching `cuda` to `mps`.
