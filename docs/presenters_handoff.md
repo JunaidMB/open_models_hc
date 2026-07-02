@@ -113,6 +113,8 @@ Code installed for the skill test.
 - Optional post-workshop: convert the three local notebooks to marimo (assessed as
   worthwhile; PEP 723 inline deps would isolate each notebook's environment).
   The `qwen3-tts`/`mlx` pyproject issue is already fixed (2 July).
-- Companion skill distribution: QR code to wherever the skill is hosted
-  (luqmaan.dev/skills/ pattern from the previous Agents Assemble session, or raw
-  GitHub URL of this branch).
+- Companion skill distribution: DONE. Served at https://luqmaan.dev/skills/localhost
+  (text/markdown, Cloudflare Pages); QR on the MacBook Desktop
+  (localhost-workshop-skill-qr.png) decodes to that URL. Note the site copy is a
+  snapshot: if the skill changes again, re-copy it to public/skills/localhost.md
+  in the luqmaan.dev repo and push (deploy is automatic).
