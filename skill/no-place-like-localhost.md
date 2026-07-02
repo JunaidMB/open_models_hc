@@ -38,8 +38,11 @@ Determine, then confirm with the attendee in one line:
 - **OS**: macOS / Linux / native Windows / WSL. Check `uname` or `$OSTYPE`; in
   PowerShell use `$PSVersionTable` or `systeminfo | Select-String 'OS Name'` (`ver`
   is a cmd.exe builtin and fails in PowerShell).
-- **RAM**: `free -g` (Linux/WSL), `sysctl hw.memsize` (mac), `systeminfo` (Windows).
-- **GPU / Apple Silicon**: `nvidia-smi`, or check for an M-series chip on mac.
+- **RAM**: `free -g` (Linux/WSL), `systeminfo` (Windows). On mac,
+  `system_profiler SPHardwareDataType` answers chip and RAM in one go, in
+  human units (`sysctl hw.memsize` works too but prints raw bytes).
+- **GPU / Apple Silicon**: `nvidia-smi`, or the M-series chip line from the
+  same `system_profiler` output on mac.
 
 **Windows guidance (this splits the room, so get it right):**
 - Ollama belongs **natively on Windows** (installer from ollama.com), not inside WSL,
@@ -81,9 +84,11 @@ For the empirical answer, point them at `llmfit` (`brew install llmfit` on mac/L
 on Windows grab the release binary from github.com/AlexsJones/llmfit): it detects
 their RAM, CPU, and GPU, scores 200+
 models on quality, speed, fit, and context, and estimates tokens/sec before they
-download anything. Its model database can lag the newest releases, so if it recommends
-something older than the table, turn that into the comprehension check: ask them why a
-2023 model might score well on "fit" yet still be the wrong choice.
+download anything. Have them run `llmfit fit` (bare `llmfit` opens an interactive
+TUI, which is harder to discuss from). Its model database can lag the newest
+releases, and it may top-rank huge obscure community fine-tunes; either way that is
+the comprehension check: ask them why the top-scored model might still be the wrong
+choice for tonight.
 
 Check their reasoning: *"Why can an M-series Mac go a size up from an equivalent PC?"*
 (Unified memory: the GPU sees all the RAM. But note the trade-off honestly if asked:
@@ -103,9 +108,10 @@ Walk them through, one command at a time, with predictions:
 3. The key moment. Before they run it, ask: *"What do you think this URL is
    imitating, and why would that matter?"*
 
-   mac / Linux / WSL:
+   mac / Linux / WSL (the `-s` matters; without it curl prints a progress table
+   that beginners read as an error):
    ```
-   curl http://localhost:11434/v1/chat/completions -d '{"model":"<model>","messages":[{"role":"user","content":"say hi"}]}'
+   curl -s http://localhost:11434/v1/chat/completions -d '{"model":"<model>","messages":[{"role":"user","content":"say hi"}]}'
    ```
    PowerShell (important: `curl` there is an alias for Invoke-WebRequest and the
    command above will fail with a parameter error; use one of these instead):
@@ -120,9 +126,11 @@ Walk them through, one command at a time, with predictions:
    API can point at my machine instead of the cloud. That's how a local model becomes
    a product."* That sentence is the thesis of the session; don't move on without it.
 
-   Two things to preempt so nothing looks broken: qwen3 is a thinking model, so its
-   first reply starts with a visible wall of self-reasoning (that's a feature; cloud
-   UIs hide it; `/set nothink` in the ollama REPL disables it). And if £ signs or
+   Two things to preempt so nothing looks broken: qwen3 is a thinking model. In the
+   ollama REPL you see the thinking stream; over the API it arrives in a separate
+   `reasoning` field. Either way it is why a single reply can take minutes, not
+   seconds (a simple extraction burned 3+ minutes of thinking in testing); `/set
+   nothink` in the REPL or `think=False` via the API disables it. And if £ signs or
    emoji render as garbage in the Windows console, `chcp 65001` fixes the encoding.
 
 ## Step 3: Session exercises (follow the presenters' pacing)
@@ -134,6 +142,15 @@ match what the presenters are saying.
 1. **Activity A, Ollama + API** (`notebooks/ollama_openai_api.ipynb`): after basic
    chat, have them attempt one structured-output call, messy text in and valid JSON
    out. Let them write the prompt; critique it rather than replacing it.
+   **Landmine (verified on mac AND the fix):** with qwen3, structured output must go
+   through the native `ollama` client with `think=False` and `format=<schema>`,
+   exactly as `tracks/screenshot_librarian.py` does. `response_format` on the `/v1`
+   endpoint spends the entire token budget in the reasoning channel: unbounded it
+   hangs for minutes; capped it returns `finish_reason: length` with EMPTY content.
+   The `/no_think` soft switch does not work over the API. Steer them to the native
+   call up front (3 seconds vs 3+ minutes in testing). When the JSON comes back
+   well-formed but semantically wrong, that is the comprehension check: the schema
+   constrains shape, not truth.
 2. **Activity B, coding harness**: they install OpenCode (opencode.ai; on Windows
    `npm i -g opencode-ai` takes seconds) and launch it in a small repo. Ollama models
    are NOT auto-discovered: they copy `docs/opencode.example.json` from this repo

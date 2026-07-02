@@ -66,11 +66,16 @@ macOS verification, 2 July afternoon (M-series MacBook, the demo machine):
    in the script). Full-TTS run and `private_podcast.py` in progress.
 5. `tests/smoke.py`: all six mechanical tests pass on macOS.
 
+6. The skill as a mac attendee PASSES (persona run, see
+   tests/persona_reports/2026-07-02_priya_mac_beginner.md). Critical catch, fixed:
+   qwen3 + response_format on /v1 returns empty content; skill and the Activity A
+   notebook now use the native client with think=False + format=schema. The
+   notebook (which hardcoded lfm2.5 and had empty exercise cells) now scaffolds
+   the full structured-output exercise; executed clean end to end.
+7. Full podcast pipeline PASSES on Apple Silicon (two real episodes over MPS,
+   LAN feed fetches HTTP 200); spaced --title feed-URL bug found and fixed.
+
 Still open:
-- The skill as an attendee on mac: install it
-  (`mkdir -p ~/.claude/commands && cp skill/no-place-like-localhost.md ~/.claude/commands/`),
-  open a fresh Claude Code session, invoke it, and role-play a mac attendee through
-  Steps 0-2 and one track. The Windows path was tested this way; the mac path wasn't.
 - Deck on the actual projector resolution if available; otherwise trust the 1080p
   overflow checks already done.
 
