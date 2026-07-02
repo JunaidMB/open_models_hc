@@ -142,8 +142,9 @@ How to guide this stage:
 - Have them **read the script before running it** and narrate back what the pipeline
   is (trigger → model → artifact). That pattern, not the specific script, is what
   they should take home.
-- If a track feels too easy, the open tier: they design their own trigger → model →
-  artifact and build it with you. They steer; you review.
+- The ★★★★★ tier on the slide, "go build something cool": they design their own
+  trigger → model → artifact and build it with you. They steer; you review. Prefer
+  this over rushing a second track; one owned idea beats two copied ones.
 - When something breaks, don't fix it. Ask what the error says, where in the pipeline
   it happened, and what they'd check first. Guide with questions; only give the answer
   if they're stuck twice.
